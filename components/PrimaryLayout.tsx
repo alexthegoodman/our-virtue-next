@@ -2,13 +2,19 @@
 
 import { poemList } from "@/content/poems";
 import { useRouter } from "next/navigation";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
+
+import styles from "./PrimaryLayout.module.css";
 
 export default function PrimaryLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const [currentChapter, setCurrentChapter] = useState(
-    window.location.pathname.split("/")[1]
-  );
+  const [currentChapter, setCurrentChapter] = useState("");
+
+  useEffect(() => {
+    if (window) {
+      setCurrentChapter(window.location.pathname.split("/")[1]);
+    }
+  }, []);
 
   const currentPoems = poemList.find(
     (chapter) => chapter.key === currentChapter
@@ -26,7 +32,14 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
     <main>
       <aside>
         <section>
-          <div>
+          <img src="/logo.png" />
+          <div className={styles.brandText}>
+            <h1>Our Virtue</h1>
+            <h2>An Introduction to God</h2>
+          </div>
+        </section>
+        <section>
+          <div className={styles.chapterList}>
             <ul>
               {poemList.map((chapter, i) => {
                 return (
@@ -40,7 +53,7 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
               })}
             </ul>
           </div>
-          <div>
+          <div className={styles.poemList}>
             <ul>
               {currentPoems?.map((poem, i) => {
                 return (

@@ -1,0 +1,15 @@
+.brandText {
+    align-self: center;
+    box-shadow: none;
+}
+
+.chapterList {
+    width: 250px;
+}
+
+.poemList {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

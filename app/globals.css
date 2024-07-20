@@ -5,6 +5,7 @@ main {
 
 aside {
   width: 35vw;
+  position: fixed;
 }
 
 aside ul {
@@ -27,11 +28,35 @@ aside ul li:hover {
 aside section {
   display: flex;
   flex-direction: row;
+  gap: 15px;
+}
+
+aside section div {
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 15px 15px 4px;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+aside section img {
+  display: block;
+  max-width: 80px;
+}
+
+aside section h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+aside section h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 400;
 }
 
 article {
   padding-left: 25px;
   width: 65vw;
+  margin-left: 35vw;
 }
 
 p:nth-of-type(2n) {
