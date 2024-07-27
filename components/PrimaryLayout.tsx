@@ -1,7 +1,7 @@
 "use client";
 
 import { poemList } from "@/content/poems";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 
 import styles from "./PrimaryLayout.module.css";
@@ -9,6 +9,7 @@ import styles from "./PrimaryLayout.module.css";
 export default function PrimaryLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [currentChapter, setCurrentChapter] = useState("");
+  const pathname = usePathname();
 
   useEffect(() => {
     if (window) {
@@ -31,7 +32,7 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
   return (
     <main>
       <aside>
-        <section>
+        <section className={styles.brand}>
           <img src="/logo.png" />
           <div className={styles.brandText}>
             <h1>Our Virtue</h1>
@@ -45,6 +46,9 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
                 return (
                   <li
                     key={`chapter${i}`}
+                    className={
+                      chapter.key === currentChapter ? styles.selected : ""
+                    }
                     onClick={() => handleChapterClick(chapter.key)}
                   >
                     {chapter.title}
@@ -59,6 +63,7 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
                 return (
                   <li
                     key={`poem${i}`}
+                    className={poem.path === pathname ? styles.selected : ""}
                     onClick={() => handlePoemClick(poem.path)}
                   >
                     {poem.title}

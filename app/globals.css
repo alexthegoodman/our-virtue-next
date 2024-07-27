@@ -3,14 +3,35 @@ main {
   flex-direction: row;
 }
 
+@media (max-width: 800px) {
+  main {
+    flex-direction: column;
+  }
+}
+
 aside {
   width: 35vw;
   position: fixed;
 }
 
+@media (max-width: 800px) {
+  aside {
+    width: 100vw;
+    position: relative;
+  }
+}
+
 aside ul {
   padding-left: 0;
   list-style: none;
+}
+
+@media (max-width: 800px) {
+  aside ul {
+    display: flex;
+    flex-direction: row;
+    margin: 2px 0;
+  }
 }
 
 aside ul li {
@@ -19,6 +40,7 @@ aside ul li {
   cursor: pointer;
   width: fit-content;
   font-size: 14px;
+  white-space: nowrap;
 }
 
 aside ul li:hover {
@@ -29,6 +51,12 @@ aside section {
   display: flex;
   flex-direction: row;
   gap: 15px;
+}
+
+@media (max-width: 800px) {
+  aside section {
+    flex-direction: column;
+  }
 }
 
 aside section div {
@@ -54,9 +82,26 @@ aside section h2 {
 }
 
 article {
-  padding-left: 25px;
+  padding-left: 50px;
   width: 65vw;
   margin-left: 35vw;
+}
+
+@media (max-width: 800px) {
+  article {
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+article ul {
+  padding-left: 15px;
+}
+
+article ul li {
+  margin-bottom: 5px;
+  line-height: 28px;
 }
 
 p:nth-of-type(2n) {
