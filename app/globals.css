@@ -16,7 +16,7 @@ aside {
 
 @media (max-width: 800px) {
   aside {
-    width: 100vw;
+    width: 100%;
     position: relative;
   }
 }
@@ -89,7 +89,7 @@ article {
 
 @media (max-width: 800px) {
   article {
-    width: 100vw;
+    width: 100%;
     padding: 0;
     margin: 0;
   }
