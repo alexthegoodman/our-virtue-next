@@ -107,3 +107,16 @@ article ul li {
 p:nth-of-type(2n) {
   margin-left: 25px;
 }
+
+blockquote {
+  white-space: pre-wrap;
+  background-color: beige;
+  margin: 0;
+  padding: 25px 90px 25px 70px;
+  width: fit-content;
+}
+
+blockquote p {
+  margin: 0;
+  line-height: 24px;
+}
