@@ -12,10 +12,11 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (window) {
-      setCurrentChapter(window.location.pathname.split("/")[1]);
+    if (pathname) {
+      console.info(pathname.split("/")[1]);
+      setCurrentChapter(pathname.split("/")[1]);
     }
-  }, []);
+  }, [pathname]);
 
   const currentPoems = poemList.find(
     (chapter) => chapter.key === currentChapter
