@@ -31,8 +31,8 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
   };
 
   return (
-    <main>
-      <aside>
+    <main className={styles.mainLayout}>
+      <aside className={styles.sidebar}>
         <section className={styles.brand}>
           <img src="/logo.png" />
           <div className={styles.brandText}>
@@ -75,7 +75,7 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
           </div>
         </section>
       </aside>
-      <article>{children}</article>
+      <article className={styles.content}>{children}</article>
     </main>
   );
 }

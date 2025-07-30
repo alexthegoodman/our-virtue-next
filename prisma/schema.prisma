@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  isActive  Boolean  @default(true)
+  isAdmin   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  threads   Thread[]
+  comments  Comment[]
+  votes     Vote[]
+
+  @@map("users")
+}
+
+model Thread {
+  id          String      @id @default(cuid())
+  title       String
+  content     String
+  stanzaPath  String      // e.g., "/salvation/believe-in-god"
+  type        ThreadType  @default(DISCUSSION)
+  tags        String[]    // Array of tags
+  isSticky    Boolean     @default(false)
+  isLocked    Boolean     @default(false)
+  isModerated Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  author      User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+  comments    Comment[]
+  votes       Vote[]
+
+  @@map("threads")
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  content     String
+  isModerated Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  thread      Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  threadId    String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+  parent      Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  parentId    String?
+  replies     Comment[] @relation("CommentReplies")
+  votes       Vote[]
+
+  @@map("comments")
+}
+
+model Vote {
+  id        String   @id @default(cuid())
+  isUpvote  Boolean  // true for upvote, false for downvote
+  createdAt DateTime @default(now())
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  thread    Thread?  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  threadId  String?
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String?
+
+  // Ensure a user can only vote once per thread/comment
+  @@unique([userId, threadId])
+  @@unique([userId, commentId])
+  @@map("votes")
+}
+
+enum ThreadType {
+  DISCUSSION
+  QUESTION
+  REFLECTION
+  PRAYER_REQUEST
+  TESTIMONY
+}

@@ -1,0 +1,117 @@
+.threadList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.threadCard {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.threadCard:hover {
+  border-color: #0066cc;
+  box-shadow: 0 2px 4px rgba(0, 102, 204, 0.1);
+}
+
+.threadHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.threadType {
+  font-size: 0.7rem;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.voteScore {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.threadTitle {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.threadPreview {
+  margin: 0 0 8px 0;
+  font-size: 0.8rem;
+  color: #666;
+  line-height: 1.4;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.tag {
+  background: #f0f0f0;
+  color: #666;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+}
+
+.threadMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.7rem;
+  color: #999;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 8px;
+}
+
+.author {
+  font-weight: 500;
+  color: #666;
+}
+
+.date, .comments {
+  font-size: 0.65rem;
+}
+
+.loading, .error, .empty {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.error {
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fed7d7;
+  border-radius: 4px;
+}
+
+.empty p {
+  margin: 4px 0;
+}
+
+.empty p:first-child {
+  font-weight: 500;
+  color: #333;
+}

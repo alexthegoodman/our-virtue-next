@@ -1,0 +1,91 @@
+.panel {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: sticky;
+  top: 20px;
+  margin-bottom: 35px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.username {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.logoutButton {
+  background: none;
+  border: 1px solid #ddd;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.logoutButton:hover {
+  background: #f0f0f0;
+}
+
+.loginButton {
+  background: rgba(229, 229, 56, 0.5);
+  color: black;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.loginButton:hover {
+  background: rgb(229, 229, 56);
+}
+
+.controls {
+  margin-bottom: 16px;
+}
+
+.newThreadButton {
+  width: 100%;
+  background: rgba(229, 229, 56, 0.5);
+  color: black;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.newThreadButton:hover:not(:disabled) {
+  background: rgb(229, 229, 56);
+}
+
+.newThreadButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}

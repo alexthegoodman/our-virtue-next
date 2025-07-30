@@ -1,0 +1,30 @@
+.poemLayout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.poemContent {
+  flex: 1;
+  min-width: 0; /* Allows content to shrink */
+  padding-right: 16px;
+}
+
+.discussionSidebar {
+  flex-shrink: 0;
+  width: 350px;
+}
+
+@media (max-width: 1024px) {
+  .poemLayout {
+    flex-direction: column;
+  }
+  
+  .discussionSidebar {
+    width: 100%;
+  }
+  
+  .poemContent {
+    padding-right: 0;
+  }
+}

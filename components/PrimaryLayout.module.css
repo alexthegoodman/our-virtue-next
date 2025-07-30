@@ -1,37 +1,72 @@
+.mainLayout {
+  display: flex;
+  min-height: 100vh;
+  gap: 20px;
+}
+
+.sidebar {
+  flex-shrink: 0;
+  /* width: 280px; */
+}
+
+.content {
+  flex: 1;
+  max-width: calc(100vw - 320px);
+}
+
 .brand {
-    flex-direction: row;
+  flex-direction: row;
+  width: 100%;
+}
+
+.brand img {
+  width: 100%;
+  height: 100%;
 }
 
 .brandText {
-    align-self: center;
-    box-shadow: none;
+  align-self: center;
+  box-shadow: none;
+  width: 100%;
 }
 
 .chapterList {
-    width: 250px;
+  width: 250px;
 }
 
-@media (max-width: 800px) {
-    .chapterList {
-        width: calc(100vw - 40px);
-        overflow-x: scroll;
-    }
+@media (max-width: 1200px) {
+  .mainLayout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .content {
+    max-width: 100%;
+  }
+
+  .chapterList {
+    width: calc(100vw - 40px);
+    overflow-x: scroll;
+  }
 }
 
 .poemList {
-    width: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-@media (max-width: 800px) {
-    .poemList {
-        width: calc(100vw - 40px);
-        overflow-x: scroll;
-    }
+@media (max-width: 1200px) {
+  .poemList {
+    width: calc(100vw - 40px);
+    overflow-x: scroll;
+  }
 }
 
 .selected {
-    background-color: beige;
+  background-color: beige;
 }
