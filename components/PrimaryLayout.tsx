@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 
 import styles from "./PrimaryLayout.module.css";
+import { Link } from "react-aria-components";
 
 export default function PrimaryLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -31,8 +32,8 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
   };
 
   return (
-    <main className={styles.mainLayout}>
-      <aside className={styles.sidebar}>
+    <>
+      <header className={styles.header}>
         <section className={styles.brand}>
           <img src="/logo.png" />
           <div className={styles.brandText}>
@@ -40,46 +41,57 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
             <h2>An Introduction to God</h2>
           </div>
         </section>
-        <section>
-          <div className={styles.chapterList}>
-            <ul>
-              {poemList.map((chapter, i) => {
-                return (
-                  <li
-                    key={`chapter${i}`}
-                    className={
-                      chapter.key === currentChapter ? styles.selected : ""
-                    }
-                    onClick={() => handleChapterClick(chapter.key)}
-                  >
-                    {chapter.title}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-          {currentPoems && (
-            <div className={styles.poemList}>
+        <div className={styles.navLinks}>
+          <Link href="/">Poems</Link>
+          <Link href="/poverty-data">Poverty Data</Link>
+        </div>
+      </header>
+
+      <main className={styles.mainLayout}>
+        <aside className={styles.sidebar}>
+          <section>
+            <div className={styles.chapterList}>
               <ul>
-                {currentPoems?.map((poem, i) => {
+                {poemList.map((chapter, i) => {
                   return (
                     <li
-                      key={`poem${i}`}
-                      className={poem.path === pathname ? styles.selected : ""}
-                      onClick={() => handlePoemClick(poem.path)}
+                      key={`chapter${i}`}
+                      className={
+                        chapter.key === currentChapter ? styles.selected : ""
+                      }
+                      onClick={() => handleChapterClick(chapter.key)}
                     >
-                      {poem.title}
+                      {chapter.title}
                     </li>
                   );
                 })}
               </ul>
             </div>
-          )}
-        </section>
-      </aside>
-      <article className={currentPoems ? styles.content : styles.fullContent}>
-        {children}
-      </article>
-    </main>
+            {currentPoems && (
+              <div className={styles.poemList}>
+                <ul>
+                  {currentPoems?.map((poem, i) => {
+                    return (
+                      <li
+                        key={`poem${i}`}
+                        className={
+                          poem.path === pathname ? styles.selected : ""
+                        }
+                        onClick={() => handlePoemClick(poem.path)}
+                      >
+                        {poem.title}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+          </section>
+        </aside>
+        <article className={currentPoems ? styles.content : styles.fullContent}>
+          {children}
+        </article>
+      </main>
+    </>
   );
 }

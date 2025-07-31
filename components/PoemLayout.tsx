@@ -22,11 +22,11 @@ export default function PoemLayout({ children }: PoemLayoutProps) {
           <DiscussionPanel stanzaPath={pathname} />
         </Suspense>
 
-        <div>
+        {/* <div>
           <Link href="/poverty-data/">
             Visit Poverty Data Repository <ArrowRight />
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

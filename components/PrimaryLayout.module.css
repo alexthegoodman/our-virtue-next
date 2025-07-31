@@ -42,20 +42,59 @@ article.fullContent {
   }
 }
 
-.brand {
+.header {
+  display: flex;
   flex-direction: row;
-  width: 100%;
+  padding: 10px 20px;
+}
+
+.header .navLinks {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  margin-left: 25px;
+}
+
+.header .navLinks a {
+  padding: 0px 25px;
+  text-decoration: none;
+  color: inherit;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  color: rgb(38, 38, 38);
+}
+
+.brand {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  /* width: 100%; */
 }
 
 .brand img {
   width: 100%;
   height: 100%;
+  max-width: 70px;
+  max-height: 70px;
 }
 
 .brandText {
   align-self: center;
   box-shadow: none;
   width: 100%;
+}
+
+.brandText h1 {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 7px;
+}
+
+.brandText h2 {
+  font-size: 1rem;
+  margin: 0;
+  font-weight: normal;
 }
 
 .chapterList {
