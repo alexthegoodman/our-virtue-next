@@ -11,7 +11,35 @@
 
 .content {
   flex: 1;
-  max-width: calc(100vw - 320px);
+  /* max-width: calc(100vw - 320px); */
+}
+
+article.content {
+  padding-left: 50px;
+  width: 65vw;
+  margin-left: 35vw;
+}
+
+@media (max-width: 800px) {
+  article.content {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+article.fullContent {
+  padding-left: 50px;
+  width: 80vw;
+  margin-left: 20vw;
+}
+
+@media (max-width: 800px) {
+  article.fullContent {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
 }
 
 .brand {

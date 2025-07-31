@@ -58,24 +58,28 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
               })}
             </ul>
           </div>
-          <div className={styles.poemList}>
-            <ul>
-              {currentPoems?.map((poem, i) => {
-                return (
-                  <li
-                    key={`poem${i}`}
-                    className={poem.path === pathname ? styles.selected : ""}
-                    onClick={() => handlePoemClick(poem.path)}
-                  >
-                    {poem.title}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+          {currentPoems && (
+            <div className={styles.poemList}>
+              <ul>
+                {currentPoems?.map((poem, i) => {
+                  return (
+                    <li
+                      key={`poem${i}`}
+                      className={poem.path === pathname ? styles.selected : ""}
+                      onClick={() => handlePoemClick(poem.path)}
+                    >
+                      {poem.title}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
         </section>
       </aside>
-      <article className={styles.content}>{children}</article>
+      <article className={currentPoems ? styles.content : styles.fullContent}>
+        {children}
+      </article>
     </main>
   );
 }

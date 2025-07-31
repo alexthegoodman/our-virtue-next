@@ -81,20 +81,6 @@ aside section h2 {
   font-weight: 400;
 }
 
-article {
-  padding-left: 50px;
-  width: 65vw;
-  margin-left: 35vw;
-}
-
-@media (max-width: 800px) {
-  article {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-  }
-}
-
 article ul {
   padding-left: 15px;
 }

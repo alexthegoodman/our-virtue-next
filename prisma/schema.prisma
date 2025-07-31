@@ -21,9 +21,10 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  threads   Thread[]
-  comments  Comment[]
-  votes     Vote[]
+  threads          Thread[]
+  comments         Comment[]
+  votes            Vote[]
+  povertyDataSources PovertyDataSource[]
 
   @@map("users")
 }
@@ -95,4 +96,28 @@ enum ThreadType {
   REFLECTION
   PRAYER_REQUEST
   TESTIMONY
+}
+
+model PovertyDataSource {
+  id               String   @id @default(cuid())
+  title            String   // e.g., "US Census Bureau Poverty Statistics 2023"
+  description      String?  // Optional description of the data source
+  sourceUrl        String   // Attribution link to original data source
+  sourceOrg        String?  // Organization name (e.g., "US Census Bureau")
+  dataTable        Json     // Standardized JSON data table
+  geographicScope  String   // e.g., "United States", "California", "Global"
+  timeRange        String?  // e.g., "2020-2023", "Annual 2022"
+  dataType         String   // e.g., "poverty_rate", "income_distribution", "housing_cost"
+  isVerified       Boolean  @default(false) // Admin verification status
+  isActive         Boolean  @default(true)
+  submissionNotes  String?  // Optional notes from submitter
+  adminNotes       String?  // Internal admin notes
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  submitter        User     @relation(fields: [submitterId], references: [id], onDelete: Cascade)
+  submitterId      String
+
+  @@map("poverty_data_sources")
 }
