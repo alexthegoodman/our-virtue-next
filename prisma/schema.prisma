@@ -121,3 +121,31 @@ model PovertyDataSource {
 
   @@map("poverty_data_sources")
 }
+
+model BookRequest {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  phone       String?  // Optional phone number
+  address     String
+  city        String
+  state       String
+  zipCode     String
+  country     String   @default("United States")
+  notes       String?  // Optional message from requester
+  status      BookRequestStatus @default(PENDING)
+  shippedAt   DateTime?
+  adminNotes  String?  // Internal admin notes
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("book_requests")
+}
+
+enum BookRequestStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  CANCELLED
+}
