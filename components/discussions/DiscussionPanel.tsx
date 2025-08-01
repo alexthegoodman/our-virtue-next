@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
-import ThreadList from './ThreadList';
-import ThreadForm from './ThreadForm';
-import ThreadView from './ThreadView';
-import AuthModal from '../auth/AuthModal';
-import styles from './DiscussionPanel.module.css';
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import ThreadList from "./ThreadList";
+import ThreadForm from "./ThreadForm";
+import ThreadView from "./ThreadView";
+import AuthModal from "../auth/AuthModal";
+import styles from "./DiscussionPanel.module.css";
 
 interface DiscussionPanelProps {
   stanzaPath: string;
@@ -19,7 +19,7 @@ export default function DiscussionPanel({ stanzaPath }: DiscussionPanelProps) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const searchParams = useSearchParams();
-  const threadId = searchParams.get('thread');
+  const threadId = searchParams.get("thread");
 
   const handleNewThread = () => {
     if (!user) {
@@ -31,43 +31,28 @@ export default function DiscussionPanel({ stanzaPath }: DiscussionPanelProps) {
 
   const handleThreadCreated = () => {
     setShowThreadForm(false);
-    setRefreshTrigger(prev => prev + 1);
+    setRefreshTrigger((prev) => prev + 1);
   };
 
   const handleCloseThread = () => {
     const url = new URL(window.location.href);
-    url.searchParams.delete('thread');
-    window.history.replaceState({}, '', url.toString());
+    url.searchParams.delete("thread");
+    window.history.replaceState({}, "", url.toString());
   };
 
   return (
     <div className={styles.panel}>
       <div className={styles.header}>
         <h3>Discussion</h3>
-        {user ? (
-          <div className={styles.userSection}>
-            <span className={styles.username}>@{user.username}</span>
-            <button onClick={logout} className={styles.logoutButton}>
-              Sign Out
-            </button>
-          </div>
-        ) : (
-          <button 
-            onClick={() => setShowAuthModal(true)}
-            className={styles.loginButton}
-          >
-            Sign In
-          </button>
-        )}
       </div>
 
       <div className={styles.controls}>
-        <button 
+        <button
           onClick={handleNewThread}
           className={styles.newThreadButton}
           disabled={!user}
         >
-          {user ? 'New Discussion' : 'Sign in to start a discussion'}
+          {user ? "New Discussion" : "Sign in to start a discussion"}
         </button>
       </div>
 
@@ -79,10 +64,7 @@ export default function DiscussionPanel({ stanzaPath }: DiscussionPanelProps) {
         />
       )}
 
-      <ThreadList 
-        stanzaPath={stanzaPath}
-        refreshTrigger={refreshTrigger}
-      />
+      <ThreadList stanzaPath={stanzaPath} refreshTrigger={refreshTrigger} />
 
       <AuthModal
         isOpen={showAuthModal}
@@ -91,10 +73,7 @@ export default function DiscussionPanel({ stanzaPath }: DiscussionPanelProps) {
       />
 
       {threadId && (
-        <ThreadView
-          threadId={threadId}
-          onClose={handleCloseThread}
-        />
+        <ThreadView threadId={threadId} onClose={handleCloseThread} />
       )}
     </div>
   );

@@ -6,21 +6,28 @@ import { ReactNode, useEffect, useState } from "react";
 
 import styles from "./PrimaryLayout.module.css";
 import { Link } from "react-aria-components";
+import { useAuth } from "@/contexts/AuthContext";
+import AuthModal from "./auth/AuthModal";
 
 export default function PrimaryLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const { user, login, logout } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [currentSection, setCurrentSection] = useState("");
   const [currentChapter, setCurrentChapter] = useState("");
   const pathname = usePathname();
 
   useEffect(() => {
     if (pathname) {
-      console.info(pathname.split("/")[1]);
-      setCurrentChapter(pathname.split("/")[1]);
+      let slugs = pathname.split("/");
+      console.info(slugs);
+      setCurrentChapter(slugs[slugs.length - 1]);
+      setCurrentSection(slugs[slugs.length - 2]);
     }
   }, [pathname]);
 
   const currentPoems = poemList.find(
-    (chapter) => chapter.key === currentChapter
+    (chapter) => chapter.key === currentSection
   )?.items;
 
   const handleChapterClick = (key: string) => {
@@ -34,16 +41,35 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <header className={styles.header}>
-        <section className={styles.brand}>
-          <img src="/logo.png" />
-          <div className={styles.brandText}>
-            <h1>Our Virtue</h1>
-            <h2>An Introduction to God</h2>
+        <div className={styles.left}>
+          <section className={styles.brand}>
+            <img src="/logo.png" />
+            <div className={styles.brandText}>
+              <h1>Our Virtue</h1>
+              <h2>An Introduction to God</h2>
+            </div>
+          </section>
+          <div className={styles.navLinks}>
+            <Link href="/">Poems</Link>
+            <Link href="/poverty-data">Poverty Data</Link>
           </div>
-        </section>
-        <div className={styles.navLinks}>
-          <Link href="/">Poems</Link>
-          <Link href="/poverty-data">Poverty Data</Link>
+        </div>
+        <div className={styles.right}>
+          {user ? (
+            <div className={styles.userSection}>
+              <span className={styles.username}>@{user.username}</span>
+              <button onClick={logout} className={styles.logoutButton}>
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowAuthModal(true)}
+              className={styles.loginButton}
+            >
+              Sign In
+            </button>
+          )}
         </div>
       </header>
 
@@ -57,7 +83,7 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
                     <li
                       key={`chapter${i}`}
                       className={
-                        chapter.key === currentChapter ? styles.selected : ""
+                        chapter.key === currentSection ? styles.selected : ""
                       }
                       onClick={() => handleChapterClick(chapter.key)}
                     >
@@ -75,7 +101,9 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
                       <li
                         key={`poem${i}`}
                         className={
-                          poem.path === pathname ? styles.selected : ""
+                          poem.path === `/${currentSection}/${currentChapter}`
+                            ? styles.selected
+                            : ""
                         }
                         onClick={() => handlePoemClick(poem.path)}
                       >
@@ -92,6 +120,12 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
           {children}
         </article>
       </main>
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onLogin={login}
+      />
     </>
   );
 }

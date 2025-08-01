@@ -24,47 +24,6 @@
   font-size: 1.1rem;
 }
 
-.userSection {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.username {
-  font-size: 0.85rem;
-  color: #666;
-  font-weight: 500;
-}
-
-.logoutButton {
-  background: none;
-  border: 1px solid #ddd;
-  padding: 4px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  color: #666;
-}
-
-.logoutButton:hover {
-  background: #f0f0f0;
-}
-
-.loginButton {
-  background: rgba(229, 229, 56, 0.5);
-  color: black;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.loginButton:hover {
-  background: rgb(229, 229, 56);
-}
-
 .controls {
   margin-bottom: 16px;
 }
