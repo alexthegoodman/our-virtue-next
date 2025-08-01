@@ -9,26 +9,31 @@ const openai = new OpenAI({
 });
 
 const LANGUAGES = {
+  // initial set
   hi: "Hindi",
+  id: "Indonesian",
+  ur: "Urdu",
+  bn: "Bengali",
+  // additional languages
   es: "Spanish",
   fr: "French",
-  de: "German",
-  it: "Italian",
-  pt: "Portuguese",
-  ru: "Russian",
-  ja: "Japanese",
+  // de: "German",
+  // it: "Italian",
+  // pt: "Portuguese",
+  // ru: "Russian",
+  // ja: "Japanese",
   ko: "Korean",
   zh: "Chinese (Simplified)",
   ar: "Arabic",
-  tr: "Turkish",
-  pl: "Polish",
-  nl: "Dutch",
-  sv: "Swedish",
-  da: "Danish",
-  no: "Norwegian",
-  fi: "Finnish",
-  he: "Hebrew",
-  th: "Thai",
+  // tr: "Turkish",
+  // pl: "Polish",
+  // nl: "Dutch",
+  // sv: "Swedish",
+  // da: "Danish",
+  // no: "Norwegian",
+  // fi: "Finnish",
+  // he: "Hebrew",
+  // th: "Thai",
 };
 
 const POEMS_DIR = path.join(__dirname, "..", "app", "(poems)");
@@ -80,6 +85,7 @@ async function translatePoem(poemPath, targetLang, languageName) {
       "..",
       "app",
       `(poems-${targetLang})`,
+      targetLang,
       relativePath
     );
     const targetDir = path.dirname(targetPath);
