@@ -8,6 +8,7 @@ import styles from "./PrimaryLayout.module.css";
 import { Link } from "react-aria-components";
 import { useAuth } from "@/contexts/AuthContext";
 import AuthModal from "./auth/AuthModal";
+import SearchBar from "./SearchBar";
 
 export default function PrimaryLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -56,6 +57,10 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
             {user && user.isAdmin && (
               <Link href="/admin/book-requests">Book Requests</Link>
             )}
+            <SearchBar
+              currentLanguage="en"
+              placeholder="Search in natural language..."
+            />
           </div>
         </div>
         <div className={styles.right}>
