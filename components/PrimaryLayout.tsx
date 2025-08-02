@@ -58,6 +58,8 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
               <Link href="/admin/book-requests">Book Requests</Link>
             )}
             <SearchBar
+              showButton={true}
+              buttonText="Search poems"
               currentLanguage="en"
               placeholder="Search in natural language..."
             />
