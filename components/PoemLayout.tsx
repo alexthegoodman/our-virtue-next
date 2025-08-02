@@ -26,11 +26,12 @@ export default function PoemLayout({ children }: PoemLayoutProps) {
           <DiscussionPanel stanzaPath={stanzaPath} />
         </Suspense>
 
-        {/* <div>
-          <Link href="/poverty-data/">
-            Visit Poverty Data Repository <ArrowRight />
-          </Link>
-        </div> */}
+        <div>
+          <Link href="/poverty-data/">Poverty Data</Link>
+          <Link href="/free-book/">Free Book</Link>
+          <Link href="/privacy-policy/">Privacy Policy</Link>
+          <Link href="/terms-conditions/">Terms & Conditions</Link>
+        </div>
       </div>
     </div>
   );
