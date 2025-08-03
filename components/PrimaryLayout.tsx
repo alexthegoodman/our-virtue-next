@@ -14,6 +14,7 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { user, login, logout } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState("");
   const [currentChapter, setCurrentChapter] = useState("");
   const pathname = usePathname();
@@ -54,7 +55,9 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
             <Link href="/">Poems</Link>
             <Link href="/poverty-data">Poverty Data</Link>
             <Link href="/free-book">Free Book</Link>
-            <Link href="/churches">Churches</Link>
+            <Link href="/churches">
+              Churches <span className={styles.badge}>New</span>
+            </Link>
             {user && user.isAdmin && (
               <Link href="/admin/book-requests">Book Requests</Link>
             )}
@@ -67,23 +70,92 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
         <div className={styles.right}>
-          {user ? (
-            <div className={styles.userSection}>
-              <span className={styles.username}>@{user.username}</span>
-              <button onClick={logout} className={styles.logoutButton}>
-                Sign Out
+          <div className={styles.desktopAuth}>
+            {user ? (
+              <div className={styles.userSection}>
+                <span className={styles.username}>@{user.username}</span>
+                <button onClick={logout} className={styles.logoutButton}>
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className={styles.loginButton}
+              >
+                Sign In
               </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setShowAuthModal(true)}
-              className={styles.loginButton}
-            >
-              Sign In
-            </button>
-          )}
+            )}
+          </div>
+          <button
+            className={styles.hamburgerButton}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={styles.hamburgerLine}></span>
+            <span className={styles.hamburgerLine}></span>
+            <span className={styles.hamburgerLine}></span>
+          </button>
         </div>
       </header>
+
+      {isMobileMenuOpen && (
+        <div className={styles.mobileMenu}>
+          <div className={styles.mobileNavLinks}>
+            <Link href="/" onPress={() => setIsMobileMenuOpen(false)}>
+              Poems
+            </Link>
+            <Link
+              href="/poverty-data"
+              onPress={() => setIsMobileMenuOpen(false)}
+            >
+              Poverty Data
+            </Link>
+            <Link href="/free-book" onPress={() => setIsMobileMenuOpen(false)}>
+              Free Book
+            </Link>
+            <Link href="/churches" onPress={() => setIsMobileMenuOpen(false)}>
+              Churches <span className={styles.badge}>New</span>
+            </Link>
+            {user && user.isAdmin && (
+              <Link
+                href="/admin/book-requests"
+                onPress={() => setIsMobileMenuOpen(false)}
+              >
+                Book Requests
+              </Link>
+            )}
+          </div>
+          <div className={styles.mobileSearchContainer}>
+            <SearchBar
+              showButton={true}
+              buttonText="Search poems"
+              currentLanguage="en"
+              placeholder="Search in natural language..."
+            />
+          </div>
+          <div className={styles.mobileAuth}>
+            {user ? (
+              <div className={styles.userSection}>
+                <span className={styles.username}>@{user.username}</span>
+                <button onClick={logout} className={styles.logoutButton}>
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setShowAuthModal(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className={styles.loginButton}
+              >
+                Sign In
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       <main className={styles.mainLayout}>
         <aside className={styles.sidebar}>
