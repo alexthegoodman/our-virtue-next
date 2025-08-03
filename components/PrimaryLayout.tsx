@@ -22,13 +22,23 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (pathname) {
-      let slugs = pathname.split("/").filter(slug => slug !== "");
+      let slugs = pathname.split("/").filter((slug) => slug !== "");
       console.info(slugs);
-      
+
       // Check if first slug is a language code
-      const supportedLanguages = ["ar", "bn", "es", "fr", "hi", "id", "ko", "ur", "zh"];
+      const supportedLanguages = [
+        "ar",
+        "bn",
+        "es",
+        "fr",
+        "hi",
+        "id",
+        "ko",
+        "ur",
+        "zh",
+      ];
       const isLanguagePath = supportedLanguages.includes(slugs[0]);
-      
+
       if (isLanguagePath) {
         setCurrentLanguage(slugs[0]);
         setCurrentChapter(slugs[slugs.length - 1]);
@@ -46,11 +56,13 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
   )?.items;
 
   const handleChapterClick = (key: string) => {
-    setCurrentChapter(key);
+    // setCurrentChapter(key);
+    setCurrentSection(key);
   };
 
   const handlePoemClick = (path: string) => {
-    const finalPath = currentLanguage === "en" ? path : `/${currentLanguage}${path}`;
+    const finalPath =
+      currentLanguage === "en" ? path : `/${currentLanguage}${path}`;
     router.push(finalPath);
   };
 
@@ -116,7 +128,10 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
       {isMobileMenuOpen && (
         <div className={styles.mobileMenu}>
           <div className={styles.mobileNavLinks}>
-            <Link href="/select-language" onPress={() => setIsMobileMenuOpen(false)}>
+            <Link
+              href="/select-language"
+              onPress={() => setIsMobileMenuOpen(false)}
+            >
               Poems
             </Link>
             <Link
