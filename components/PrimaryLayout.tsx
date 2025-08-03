@@ -54,6 +54,7 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
             <Link href="/">Poems</Link>
             <Link href="/poverty-data">Poverty Data</Link>
             <Link href="/free-book">Free Book</Link>
+            <Link href="/churches">Churches</Link>
             {user && user.isAdmin && (
               <Link href="/admin/book-requests">Book Requests</Link>
             )}

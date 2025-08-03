@@ -3,6 +3,7 @@
 import { ReactNode, Suspense } from "react";
 import { usePathname } from "next/navigation";
 import DiscussionPanel from "./discussions/DiscussionPanel";
+import OurChurchCTA from "./OurChurchCTA";
 import styles from "./PoemLayout.module.css";
 import Link from "next/link";
 import { ArrowRight } from "@phosphor-icons/react";
@@ -22,6 +23,7 @@ export default function PoemLayout({ children }: PoemLayoutProps) {
     <div className={styles.poemLayout}>
       <div className={styles.poemContent}>{children}</div>
       <div className={styles.discussionSidebar}>
+        {/* <OurChurchCTA /> */}
         <Suspense fallback={<div>Loading discussions...</div>}>
           <DiscussionPanel stanzaPath={stanzaPath} />
         </Suspense>
