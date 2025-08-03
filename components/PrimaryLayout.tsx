@@ -17,14 +17,27 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState("");
   const [currentChapter, setCurrentChapter] = useState("");
+  const [currentLanguage, setCurrentLanguage] = useState("en");
   const pathname = usePathname();
 
   useEffect(() => {
     if (pathname) {
-      let slugs = pathname.split("/");
+      let slugs = pathname.split("/").filter(slug => slug !== "");
       console.info(slugs);
-      setCurrentChapter(slugs[slugs.length - 1]);
-      setCurrentSection(slugs[slugs.length - 2]);
+      
+      // Check if first slug is a language code
+      const supportedLanguages = ["ar", "bn", "es", "fr", "hi", "id", "ko", "ur", "zh"];
+      const isLanguagePath = supportedLanguages.includes(slugs[0]);
+      
+      if (isLanguagePath) {
+        setCurrentLanguage(slugs[0]);
+        setCurrentChapter(slugs[slugs.length - 1]);
+        setCurrentSection(slugs[slugs.length - 2]);
+      } else {
+        setCurrentLanguage("en");
+        setCurrentChapter(slugs[slugs.length - 1]);
+        setCurrentSection(slugs[slugs.length - 2]);
+      }
     }
   }, [pathname]);
 
@@ -37,7 +50,8 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
   };
 
   const handlePoemClick = (path: string) => {
-    router.push(path);
+    const finalPath = currentLanguage === "en" ? path : `/${currentLanguage}${path}`;
+    router.push(finalPath);
   };
 
   return (
@@ -45,14 +59,14 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
       <header className={styles.header}>
         <div className={styles.left}>
           <section className={styles.brand}>
-            <img src="/logo.png" />
+            <img src="/logo.png" alt="Our Virtue Logo" />
             <div className={styles.brandText}>
               <h1>Our Virtue</h1>
               <h2>An Introduction to God</h2>
             </div>
           </section>
           <div className={styles.navLinks}>
-            <Link href="/">Poems</Link>
+            <Link href="/select-language">Poems</Link>
             <Link href="/poverty-data">Poverty Data</Link>
             <Link href="/free-book">Free Book</Link>
             <Link href="/churches">
@@ -64,7 +78,7 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
             <SearchBar
               showButton={true}
               buttonText="Search poems"
-              currentLanguage="en"
+              currentLanguage={currentLanguage}
               placeholder="Search in natural language..."
             />
           </div>
@@ -102,7 +116,7 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
       {isMobileMenuOpen && (
         <div className={styles.mobileMenu}>
           <div className={styles.mobileNavLinks}>
-            <Link href="/" onPress={() => setIsMobileMenuOpen(false)}>
+            <Link href="/select-language" onPress={() => setIsMobileMenuOpen(false)}>
               Poems
             </Link>
             <Link
@@ -130,7 +144,7 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
             <SearchBar
               showButton={true}
               buttonText="Search poems"
-              currentLanguage="en"
+              currentLanguage={currentLanguage}
               placeholder="Search in natural language..."
             />
           </div>

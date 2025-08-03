@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Indexing error:', error);
     return NextResponse.json(
-      { error: 'Failed to index poems', details: error.message },
+      { error: 'Failed to index poems', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

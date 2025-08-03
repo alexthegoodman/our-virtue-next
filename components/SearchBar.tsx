@@ -34,7 +34,7 @@ export default function SearchBar({
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const router = useRouter();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const inputRef = useRef<HTMLInputElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -249,7 +249,7 @@ export default function SearchBar({
           {isOpen && query && results.length === 0 && !isLoading && (
             <div className={styles.noResults}>
               <p className={styles.noResultsText}>
-                No results found for "{query}"
+                No results found for &quot;{query}&quot;
               </p>
             </div>
           )}
