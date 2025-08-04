@@ -12,6 +12,8 @@ export async function GET(request: NextRequest) {
     const dataType = searchParams.get('dataType');
     const geographicScope = searchParams.get('geographicScope');
     const verified = searchParams.get('verified');
+    const includeSubmitter = searchParams.get('includeSubmitter') === 'true';
+    const noPagination = searchParams.get('noPagination') === 'true';
 
     const where: any = {
       isActive: true,
@@ -37,27 +39,37 @@ export async function GET(request: NextRequest) {
       where.isVerified = true;
     }
 
-    const skip = (page - 1) * limit;
+    const skip = noPagination ? undefined : (page - 1) * limit;
+    const take = noPagination ? undefined : limit;
+
+    const submitterSelect = includeSubmitter 
+      ? {
+          id: true,
+          username: true,
+          email: true,
+        }
+      : {
+          id: true,
+          username: true,
+        };
 
     const [dataSources, total] = await Promise.all([
       prisma.povertyDataSource.findMany({
         where,
         skip,
-        take: limit,
+        take,
         include: {
           submitter: {
-            select: {
-              id: true,
-              username: true,
-            }
+            select: submitterSelect
           }
         },
         orderBy: { createdAt: 'desc' }
       }),
-      prisma.povertyDataSource.count({ where })
+      noPagination ? Promise.resolve(0) : prisma.povertyDataSource.count({ where })
     ]);
 
     return NextResponse.json({
+      data: dataSources,
       dataSources,
       pagination: {
         page,

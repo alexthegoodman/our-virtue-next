@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import PovertyDataForm from '@/components/poverty-data/PovertyDataForm';
 import PovertyDataList from '@/components/poverty-data/PovertyDataList';
@@ -42,12 +43,17 @@ export default function PovertyDataPage() {
         </p>
         
         <div className={styles.heroActions}>
-          <button 
-            onClick={handleSubmitClick}
-            className={styles.submitButton}
-          >
-            Contribute Data Source
-          </button>
+          <div className={styles.actionButtons}>
+            <Link href="/poverty-data/map" className={styles.mapButton}>
+              View Interactive Map
+            </Link>
+            <button 
+              onClick={handleSubmitClick}
+              className={styles.submitButton}
+            >
+              Contribute Data Source
+            </button>
+          </div>
           <div className={styles.heroStats}>
             <div className={styles.stat}>
               <span className={styles.statNumber}>Community-Driven</span>
