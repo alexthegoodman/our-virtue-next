@@ -25,6 +25,10 @@ model User {
   comments         Comment[]
   votes            Vote[]
   povertyDataSources PovertyDataSource[]
+  createdChurches  Church[] @relation("ChurchCreator")
+  churchMemberships ChurchMember[]
+  churchPosts      ChurchPost[] @relation("ChurchPostAuthor")
+  churchComments   ChurchPostComment[] @relation("ChurchCommentAuthor")
 
   @@map("users")
 }
@@ -148,4 +152,85 @@ enum BookRequestStatus {
   PROCESSING
   SHIPPED
   CANCELLED
+}
+
+model Church {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  slug        String   @unique // URL-friendly name
+  imageUrl    String?  // Vercel Blob image URL
+  category    ChurchCategory
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  creator     User     @relation("ChurchCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId   String
+  members     ChurchMember[]
+  posts       ChurchPost[]
+
+  @@map("churches")
+}
+
+model ChurchMember {
+  id        String   @id @default(cuid())
+  joinedAt  DateTime @default(now())
+  role      ChurchMemberRole @default(MEMBER)
+
+  // Relations
+  church    Church   @relation(fields: [churchId], references: [id], onDelete: Cascade)
+  churchId  String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@unique([churchId, userId])
+  @@map("church_members")
+}
+
+model ChurchPost {
+  id          String   @id @default(cuid())
+  title       String?  // Optional title for posts
+  content     String
+  imageUrl    String?  // Optional image attachment
+  isPinned    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  church      Church   @relation(fields: [churchId], references: [id], onDelete: Cascade)
+  churchId    String
+  author      User     @relation("ChurchPostAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+  comments    ChurchPostComment[]
+
+  @@map("church_posts")
+}
+
+model ChurchPostComment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  post      ChurchPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  author    User       @relation("ChurchCommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+
+  @@map("church_post_comments")
+}
+
+enum ChurchCategory {
+  PARENTS      // Still Waters - for parents
+  YOUNG_PEOPLE // The New Foundation - for younger people
+  WORKERS      // Servants of the Harvest - for hard working people
+}
+
+enum ChurchMemberRole {
+  MEMBER
+  MODERATOR
+  ADMIN
 }
