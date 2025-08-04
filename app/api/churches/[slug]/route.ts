@@ -8,9 +8,10 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { slug: string } }
 ) {
+  // Get user from request if authenticated
+  const user = getUserFromRequest(request);
+
   try {
-    // Get user from request if authenticated
-    const user = getUserFromRequest(request);
     const userId = user?.userId || null;
 
     const slug = params.slug;
@@ -19,36 +20,35 @@ export async function GET(
     const church = await prisma.church.findFirst({
       where: {
         slug: slug,
-        isActive: true
+        isActive: true,
       },
       include: {
         _count: {
           select: {
-            members: true
-          }
-        },
-        members: userId ? {
-          where: {
-            userId: userId
+            members: true,
           },
-          select: {
-            id: true
-          }
-        } : false,
+        },
+        members: userId
+          ? {
+              where: {
+                userId: userId,
+              },
+              select: {
+                id: true,
+              },
+            }
+          : false,
         creator: {
           select: {
             id: true,
-            username: true
-          }
-        }
-      }
+            username: true,
+          },
+        },
+      },
     });
 
     if (!church) {
-      return NextResponse.json(
-        { error: "Church not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Church not found" }, { status: 404 });
     }
 
     // Format the response
@@ -62,7 +62,7 @@ export async function GET(
       memberCount: church._count.members,
       isJoined: userId ? (church.members as any)?.length > 0 : false,
       isCreator: userId ? church.creator.id === userId : false,
-      creator: church.creator
+      creator: church.creator,
     };
 
     return NextResponse.json(formattedChurch);

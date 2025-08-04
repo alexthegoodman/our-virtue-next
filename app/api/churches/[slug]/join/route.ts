@@ -8,9 +8,10 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { slug: string } }
 ) {
+  // Verify authentication
+  const user = getUserFromRequest(request);
+
   try {
-    // Verify authentication
-    const user = getUserFromRequest(request);
     if (!user) {
       return NextResponse.json(
         { error: "Authentication required" },
@@ -25,15 +26,12 @@ export async function POST(
     const church = await prisma.church.findFirst({
       where: {
         slug: slug,
-        isActive: true
-      }
+        isActive: true,
+      },
     });
 
     if (!church) {
-      return NextResponse.json(
-        { error: "Church not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Church not found" }, { status: 404 });
     }
 
     // Check if user is already a member
@@ -41,9 +39,9 @@ export async function POST(
       where: {
         churchId_userId: {
           churchId: church.id,
-          userId: userId
-        }
-      }
+          userId: userId,
+        },
+      },
     });
 
     if (existingMembership) {
@@ -58,8 +56,8 @@ export async function POST(
       data: {
         churchId: church.id,
         userId: userId,
-        role: "MEMBER"
-      }
+        role: "MEMBER",
+      },
     });
 
     return NextResponse.json({
@@ -69,8 +67,8 @@ export async function POST(
         churchId: membership.churchId,
         userId: membership.userId,
         role: membership.role,
-        joinedAt: membership.joinedAt
-      }
+        joinedAt: membership.joinedAt,
+      },
     });
   } catch (error) {
     console.error("Error joining church:", error);

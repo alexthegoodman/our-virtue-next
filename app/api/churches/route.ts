@@ -5,34 +5,37 @@ import { getUserFromRequest } from "@/lib/auth";
 const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
+  // Get user from request if authenticated
+  const user = getUserFromRequest(request);
+
   try {
-    // Get user from request if authenticated
-    const user = getUserFromRequest(request);
     const userId = user?.userId || null;
 
     // Fetch all active churches with member counts
     const churches = await prisma.church.findMany({
       where: {
-        isActive: true
+        isActive: true,
       },
       include: {
         _count: {
           select: {
-            members: true
-          }
-        },
-        members: userId ? {
-          where: {
-            userId: userId
+            members: true,
           },
-          select: {
-            id: true
-          }
-        } : false
+        },
+        members: userId
+          ? {
+              where: {
+                userId: userId,
+              },
+              select: {
+                id: true,
+              },
+            }
+          : false,
       },
       orderBy: {
-        createdAt: 'asc'
-      }
+        createdAt: "asc",
+      },
     });
 
     // Get user's church creation count if logged in
@@ -41,13 +44,13 @@ export async function GET(request: NextRequest) {
       userChurchCount = await prisma.church.count({
         where: {
           creatorId: userId,
-          isActive: true
-        }
+          isActive: true,
+        },
       });
     }
 
     // Format the response
-    const formattedChurches = churches.map(church => ({
+    const formattedChurches = churches.map((church) => ({
       id: church.id,
       name: church.name,
       description: church.description,
@@ -55,12 +58,12 @@ export async function GET(request: NextRequest) {
       imageUrl: church.imageUrl,
       category: church.category,
       memberCount: church._count.members,
-      isJoined: userId ? (church.members as any)?.length > 0 : false
+      isJoined: userId ? (church.members as any)?.length > 0 : false,
     }));
 
     return NextResponse.json({
       churches: formattedChurches,
-      userChurchCount
+      userChurchCount,
     });
   } catch (error) {
     console.error("Error fetching churches:", error);

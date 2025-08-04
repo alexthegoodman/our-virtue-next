@@ -5,9 +5,10 @@ import { getUserFromRequest } from "@/lib/auth";
 const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
+  // Verify authentication
+  const user = getUserFromRequest(request);
+
   try {
-    // Verify authentication
-    const user = getUserFromRequest(request);
     if (!user) {
       return NextResponse.json(
         { error: "Authentication required" },
@@ -21,8 +22,8 @@ export async function POST(request: NextRequest) {
     const existingChurch = await prisma.church.count({
       where: {
         creatorId: userId,
-        isActive: true
-      }
+        isActive: true,
+      },
     });
 
     if (existingChurch >= 1) {
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
 
     // Check if slug is already taken
     const existingSlug = await prisma.church.findUnique({
-      where: { slug: slug.trim() }
+      where: { slug: slug.trim() },
     });
 
     if (existingSlug) {
@@ -85,8 +86,8 @@ export async function POST(request: NextRequest) {
         category: category as ChurchCategory,
         slug: slug.trim(),
         imageUrl: imageUrl || null,
-        creatorId: userId
-      }
+        creatorId: userId,
+      },
     });
 
     // Automatically make the creator a member with ADMIN role
@@ -94,8 +95,8 @@ export async function POST(request: NextRequest) {
       data: {
         churchId: church.id,
         userId: userId,
-        role: "ADMIN"
-      }
+        role: "ADMIN",
+      },
     });
 
     // Create a welcome post
@@ -123,8 +124,8 @@ We're all here to grow and learn together. Please be kind, respectful, and consi
 *This is a pinned post to help new members get oriented. Welcome to the community!*`,
         isPinned: true,
         churchId: church.id,
-        authorId: userId
-      }
+        authorId: userId,
+      },
     });
 
     return NextResponse.json({
@@ -134,7 +135,7 @@ We're all here to grow and learn together. Please be kind, respectful, and consi
       slug: church.slug,
       category: church.category,
       imageUrl: church.imageUrl,
-      createdAt: church.createdAt
+      createdAt: church.createdAt,
     });
   } catch (error) {
     console.error("Error creating church:", error);

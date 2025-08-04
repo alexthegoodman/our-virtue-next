@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import DataTableViewer from './DataTableViewer';
 import styles from './PovertyDataList.module.css';
 
 interface PovertyDataSource {
@@ -10,6 +11,10 @@ interface PovertyDataSource {
   description?: string;
   sourceUrl: string;
   sourceOrg?: string;
+  dataTable: {
+    columns: string[];
+    data: string[][];
+  } | null;
   geographicScope: string;
   timeRange?: string;
   dataType: string;
@@ -199,6 +204,13 @@ export default function PovertyDataList({ onEdit }: PovertyDataListProps) {
 
                 {source.description && (
                   <p className={styles.description}>{source.description}</p>
+                )}
+
+                {source.dataTable && (
+                  <DataTableViewer 
+                    dataTable={source.dataTable}
+                    title="Data Table"
+                  />
                 )}
 
                 <div className={styles.cardFooter}>
