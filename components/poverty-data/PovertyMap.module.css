@@ -4,7 +4,8 @@
   height: 600px;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .controls {
@@ -104,8 +105,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loadingOverlay p {
@@ -141,11 +146,13 @@
 }
 
 .popup {
-  max-width: 300px;
+  max-width: 700px;
 }
 
 .popupContent {
   padding: 4px;
+  max-height: 300px;
+  overflow-y: scroll;
 }
 
 .popupContent h3 {
@@ -211,23 +218,62 @@
   border-top: 1px solid #f3f4f6;
 }
 
+.dataTablePreview {
+  margin-top: 8px;
+  font-size: 10px;
+}
+
+.popupTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 4px;
+}
+
+.popupTable th {
+  background: #f9fafb;
+  padding: 4px 6px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  font-size: 9px;
+}
+
+.popupTable td {
+  padding: 3px 6px;
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
+  font-size: 9px;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.moreRows {
+  font-size: 9px;
+  color: #9ca3af;
+  margin: 4px 0 0 0;
+  font-style: italic;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .mapContainer {
     height: 500px;
   }
-  
+
   .controls {
     position: static;
     margin-bottom: 16px;
     max-width: none;
     border-radius: 8px;
   }
-  
+
   .legend {
     display: none;
   }
-  
+
   .popup {
     max-width: 250px;
   }
@@ -238,7 +284,7 @@
     height: 400px;
     border-radius: 8px;
   }
-  
+
   .controls {
     padding: 16px;
   }

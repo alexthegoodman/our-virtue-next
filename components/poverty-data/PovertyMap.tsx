@@ -78,6 +78,17 @@ const DATA_TYPE_COLORS: Record<string, string> = {
   healthcare: "#059669",
   agricultural_profile: "#0d9488",
   continental_analysis: "#0e7490",
+  infectious_disease_analysis: "#dc2626",
+  mortality_statistics: "#991b1b",
+  age_stratified_mortality: "#7c2d12",
+  regional_mortality_analysis: "#b91c1c",
+  crisis_mortality_analysis: "#ef4444",
+  health_transition_analysis: "#f87171",
+  continental_health_overview: "#fca5a5",
+  sme_finance_analysis: "#1d4ed8",
+  informal_economy_analysis: "#2563eb",
+  development_strategies: "#3b82f6",
+  digital_investment_opportunities: "#60a5fa",
   other: "#6366f1",
 };
 
@@ -127,28 +138,62 @@ export default function PovertyMap({ data }: PovertyMapProps) {
         .filter((region) => region.dataSources.length > 0)
     : regionData;
 
-  // Create GeoJSON for region circles
+  // Severity scoring for different data types
+  const getSeverityScore = (dataType: string): number => {
+    const severityMap: Record<string, number> = {
+      crisis_mortality_analysis: 100,
+      infectious_disease_analysis: 85,
+      mortality_statistics: 70,
+      poverty_rate: 65,
+      age_stratified_mortality: 55,
+      food_insecurity: 50,
+      regional_mortality_analysis: 45,
+      healthcare: 40,
+      housing_cost: 35,
+      employment: 30,
+      health_transition_analysis: 25,
+      income_distribution: 22,
+      continental_health_overview: 20,
+      education: 18,
+      agricultural_profile: 15,
+      continental_analysis: 12,
+      sme_finance_analysis: 10,
+      informal_economy_analysis: 8,
+      development_strategies: 6,
+      digital_investment_opportunities: 4,
+      other: 2,
+    };
+    return severityMap[dataType] || 2;
+  };
+
+  // Create GeoJSON for individual data source circles
   const geoJsonData = {
     type: "FeatureCollection" as const,
-    features: filteredRegionData.map((region, index) => ({
-      type: "Feature" as const,
-      id: index,
-      properties: {
-        name: region.name,
-        dataCount: region.dataSources.length,
-        primaryDataType: region.dataSources[0]?.dataType || "other",
-      },
-      geometry: {
-        type: "Point" as const,
-        coordinates: region.center,
-      },
-    })),
+    features: filteredRegionData.flatMap((region) =>
+      region.dataSources.map((source, sourceIndex) => ({
+        type: "Feature" as const,
+        id: `${region.name}-${sourceIndex}`,
+        properties: {
+          regionName: region.name,
+          dataType: source.dataType,
+          severity: getSeverityScore(source.dataType),
+          title: source.title,
+          isVerified: source.isVerified,
+          sourceOrg: source.sourceOrg,
+          dataTable: source.dataTable,
+        },
+        geometry: {
+          type: "Point" as const,
+          coordinates: region.center,
+        },
+      }))
+    ),
   };
 
   const handleRegionClick = (event: any) => {
     const feature = event.features?.[0];
     if (feature) {
-      const regionName = feature.properties.name;
+      const regionName = feature.properties.regionName;
       const region = filteredRegionData.find((r) => r.name === regionName);
       if (region) {
         setSelectedRegion(region);
@@ -257,35 +302,24 @@ export default function PovertyMap({ data }: PovertyMapProps) {
             paint={{
               "circle-radius": [
                 "interpolate",
-                ["linear"],
-                ["get", "dataCount"],
-                1,
-                20,
-                5,
-                40,
+                ["exponential", 1.2],
+                ["get", "severity"],
+                2,
+                12,
                 10,
+                26,
+                25,
+                42,
+                50,
                 60,
+                75,
+                78,
+                100,
+                85,
               ],
               "circle-color": [
-                "case",
-                ["==", ["get", "primaryDataType"], "poverty_rate"],
-                DATA_TYPE_COLORS.poverty_rate,
-                ["==", ["get", "primaryDataType"], "income_distribution"],
-                DATA_TYPE_COLORS.income_distribution,
-                ["==", ["get", "primaryDataType"], "housing_cost"],
-                DATA_TYPE_COLORS.housing_cost,
-                ["==", ["get", "primaryDataType"], "food_insecurity"],
-                DATA_TYPE_COLORS.food_insecurity,
-                ["==", ["get", "primaryDataType"], "employment"],
-                DATA_TYPE_COLORS.employment,
-                ["==", ["get", "primaryDataType"], "education"],
-                DATA_TYPE_COLORS.education,
-                ["==", ["get", "primaryDataType"], "healthcare"],
-                DATA_TYPE_COLORS.healthcare,
-                ["==", ["get", "primaryDataType"], "agricultural_profile"],
-                DATA_TYPE_COLORS.agricultural_profile,
-                ["==", ["get", "primaryDataType"], "continental_analysis"],
-                DATA_TYPE_COLORS.continental_analysis,
+                "coalesce",
+                ["get", ["get", "dataType"], ["literal", DATA_TYPE_COLORS]],
                 DATA_TYPE_COLORS.other,
               ],
               "circle-opacity": 0.8,
@@ -295,54 +329,93 @@ export default function PovertyMap({ data }: PovertyMapProps) {
           />
         </Source>
 
-        {selectedRegion && popupLongitude !== null && popupLatitude !== null && (
-          <Popup
-            key={`${selectedRegion.name}-${popupLongitude}-${popupLatitude}`}
-            longitude={popupLongitude}
-            latitude={popupLatitude}
-            anchor="bottom"
-            onClose={() => {
-              setSelectedRegion(null);
-              setPopupLongitude(null);
-              setPopupLatitude(null);
-            }}
-            className={styles.popup}
-          >
-            <div className={styles.popupContent}>
-              <h3>{selectedRegion.name}</h3>
-              <p>
-                <strong>{selectedRegion.dataSources?.length}</strong> data
-                sources
-              </p>
-              <div className={styles.dataSourcesList}>
-                {selectedRegion.dataSources
-                  ?.slice(0, 3)
-                  .map((source, index) => (
-                    <div key={index} className={styles.dataSourceItem}>
-                      <div className={styles.dataSourceTitle}>
-                        {source.title}
-                      </div>
-                      <div className={styles.dataSourceMeta}>
-                        <span className={styles.dataType}>
-                          {source.dataType.replace("_", " ")}
-                        </span>
-                        {source.isVerified && (
-                          <span className={styles.verifiedBadge}>
-                            ✓ Verified
+        {selectedRegion &&
+          popupLongitude !== null &&
+          popupLatitude !== null && (
+            <Popup
+              key={`${selectedRegion.name}-${popupLongitude}-${popupLatitude}`}
+              longitude={popupLongitude}
+              latitude={popupLatitude}
+              anchor="bottom"
+              onClose={() => {
+                setSelectedRegion(null);
+                setPopupLongitude(null);
+                setPopupLatitude(null);
+              }}
+              className={styles.popup}
+              maxWidth="700px"
+            >
+              <div className={styles.popupContent}>
+                <h3>{selectedRegion.name}</h3>
+                <p>
+                  <strong>{selectedRegion.dataSources?.length}</strong> data
+                  sources
+                </p>
+                <div className={styles.dataSourcesList}>
+                  {selectedRegion.dataSources
+                    ?.slice(0, 2)
+                    .map((source, index) => (
+                      <div key={index} className={styles.dataSourceItem}>
+                        <div className={styles.dataSourceTitle}>
+                          {source.title}
+                        </div>
+                        <div className={styles.dataSourceMeta}>
+                          <span className={styles.dataType}>
+                            {source.dataType
+                              .replace(/_/g, " ")
+                              .replace(/\b\w/g, (l) => l.toUpperCase())}
                           </span>
+                          {source.isVerified && (
+                            <span className={styles.verifiedBadge}>
+                              ✓ Verified
+                            </span>
+                          )}
+                        </div>
+                        {source.dataTable && (
+                          <div className={styles.dataTablePreview}>
+                            <table className={styles.popupTable}>
+                              <thead>
+                                <tr>
+                                  {(source.dataTable as any).columns
+                                    ?.slice(0, 3)
+                                    .map((col: string, colIndex: number) => (
+                                      <th key={colIndex}>{col}</th>
+                                    ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {(source.dataTable as any).data
+                                  ?.slice(0, 3)
+                                  .map((row: any[], rowIndex: number) => (
+                                    <tr key={rowIndex}>
+                                      {row
+                                        .slice(0, 3)
+                                        .map((cell, cellIndex) => (
+                                          <td key={cellIndex}>{cell}</td>
+                                        ))}
+                                    </tr>
+                                  ))}
+                              </tbody>
+                            </table>
+                            {(source.dataTable as any).data?.length > 3 && (
+                              <p className={styles.moreRows}>
+                                +{(source.dataTable as any).data.length - 3}{" "}
+                                more rows
+                              </p>
+                            )}
+                          </div>
                         )}
                       </div>
+                    ))}
+                  {selectedRegion.dataSources?.length > 2 && (
+                    <div className={styles.moreDataSources}>
+                      +{selectedRegion.dataSources?.length - 2} more sources
                     </div>
-                  ))}
-                {selectedRegion.dataSources?.length > 3 && (
-                  <div className={styles.moreDataSources}>
-                    +{selectedRegion.dataSources?.length - 3} more sources
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          </Popup>
-        )}
+            </Popup>
+          )}
       </Map>
     </div>
   );

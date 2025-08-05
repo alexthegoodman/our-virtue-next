@@ -29,9 +29,9 @@ article.content {
 }
 
 article.fullContent {
-  padding-left: 50px;
-  width: 80vw;
-  margin-left: 20vw;
+  padding: 0 50px;
+  width: 100vw;
+  /* margin-left: 20vw; */
 }
 
 @media (max-width: 800px) {
@@ -243,7 +243,8 @@ article.fullContent {
   margin-bottom: 20px;
 }
 
-.mobileNavLinks a {
+.mobileNavLinks a,
+.mobileNavLinks span {
   padding: 10px 0;
   text-decoration: none;
   color: rgb(38, 38, 38);

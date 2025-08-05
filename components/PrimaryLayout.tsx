@@ -87,12 +87,12 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
             {user && user.isAdmin && (
               <Link href="/admin/book-requests">Book Requests</Link>
             )}
-            <SearchBar
+            {/* <SearchBar
               showButton={true}
               buttonText="Search poems"
               currentLanguage={currentLanguage}
               placeholder="Search in natural language..."
-            />
+            /> */}
           </div>
         </div>
         <div className={styles.right}>
@@ -128,41 +128,67 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
       {isMobileMenuOpen && (
         <div className={styles.mobileMenu}>
           <div className={styles.mobileNavLinks}>
-            <Link
-              href="/select-language"
-              onPress={() => setIsMobileMenuOpen(false)}
+            <span
+              // href="/select-language"
+              // onPressEnd={() => setIsMobileMenuOpen(false)}
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                router.push("/select-language");
+              }}
             >
               Poems
-            </Link>
-            <Link
-              href="/poverty-data"
-              onPress={() => setIsMobileMenuOpen(false)}
+            </span>
+            <span
+              // href="/poverty-data"
+              // onPressEnd={() => setIsMobileMenuOpen(false)}
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                router.push("/poverty-data");
+              }}
             >
               Poverty Data
-            </Link>
-            <Link href="/free-book" onPress={() => setIsMobileMenuOpen(false)}>
+            </span>
+            <span
+              // href="/free-book"
+              // onPressEnd={() => setIsMobileMenuOpen(false)}
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                router.push("/free-book");
+              }}
+            >
               Free Book
-            </Link>
-            <Link href="/churches" onPress={() => setIsMobileMenuOpen(false)}>
+            </span>
+            <span
+              // href="/churches"
+              // onPressEnd={() => setIsMobileMenuOpen(false)}
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                router.push("/churches");
+              }}
+            >
               Churches <span className={styles.badge}>New</span>
-            </Link>
+            </span>
             {user && user.isAdmin && (
-              <Link
-                href="/admin/book-requests"
-                onPress={() => setIsMobileMenuOpen(false)}
+              <span
+                // href="/admin/book-requests"
+                // onPressEnd={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  router.push("/admin/book-requests");
+                }}
               >
                 Book Requests
-              </Link>
+              </span>
             )}
           </div>
-          <div className={styles.mobileSearchContainer}>
+          {/* <div className={styles.mobileSearchContainer}>
             <SearchBar
               showButton={true}
               buttonText="Search poems"
               currentLanguage={currentLanguage}
               placeholder="Search in natural language..."
             />
-          </div>
+          </div> */}
           <div className={styles.mobileAuth}>
             {user ? (
               <div className={styles.userSection}>
@@ -187,26 +213,27 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
       )}
 
       <main className={styles.mainLayout}>
-        <aside className={styles.sidebar}>
-          <section>
-            <div className={styles.chapterList}>
-              <ul>
-                {poemList.map((chapter, i) => {
-                  return (
-                    <li
-                      key={`chapter${i}`}
-                      className={
-                        chapter.key === currentSection ? styles.selected : ""
-                      }
-                      onClick={() => handleChapterClick(chapter.key)}
-                    >
-                      {chapter.title}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-            {currentPoems && (
+        {currentPoems && (
+          <aside className={styles.sidebar}>
+            <section>
+              <div className={styles.chapterList}>
+                <ul>
+                  {poemList.map((chapter, i) => {
+                    return (
+                      <li
+                        key={`chapter${i}`}
+                        className={
+                          chapter.key === currentSection ? styles.selected : ""
+                        }
+                        onClick={() => handleChapterClick(chapter.key)}
+                      >
+                        {chapter.title}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
               <div className={styles.poemList}>
                 <ul>
                   {currentPoems?.map((poem, i) => {
@@ -226,9 +253,9 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
                   })}
                 </ul>
               </div>
-            )}
-          </section>
-        </aside>
+            </section>
+          </aside>
+        )}
         <article className={currentPoems ? styles.content : styles.fullContent}>
           {children}
         </article>

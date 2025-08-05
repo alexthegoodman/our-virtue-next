@@ -52,8 +52,8 @@ export default function PovertyMapPage() {
   return (
     <div className={styles.container}>
       {/* Header */}
-      <div className={styles.header}>
-        {/* <div className={styles.breadcrumb}>
+      {/* <div className={styles.header}>
+        <div className={styles.breadcrumb}>
           <Link href="/poverty-data" className={styles.backLink}>
             <ArrowLeft size={16} />
             Back to Poverty Data
@@ -67,8 +67,8 @@ export default function PovertyMapPage() {
             globe. Each circle represents a geographic region with available
             data sources.
           </p>
-        </div> */}
-      </div>
+        </div>
+      </div> */}
 
       {/* Map Section */}
       <div className={styles.mapSection}>
