@@ -50,7 +50,7 @@ export default function DiscussionPanel({ stanzaPath }: DiscussionPanelProps) {
         <button
           onClick={handleNewThread}
           className={styles.newThreadButton}
-          disabled={!user}
+          // disabled={!user}
         >
           {user ? "New Discussion" : "Sign in to start a discussion"}
         </button>
