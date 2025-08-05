@@ -27,6 +27,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
 
 # vercel
 .vercel
@@ -37,4 +38,7 @@ next-env.d.ts
 
 meilisearch
 .env
+/app/generated/prisma
+
+meilisearch
 data.ms

@@ -1,0 +1,17 @@
+# Database
+DATABASE_URL="postgresql://alex:password@localhost:5432/our-virtue-next"
+
+# JWT Secret (generate a random string for production)
+JWT_SECRET="your-super-secret-jwt-key-change-this-in-production"
+
+# OpenAI API Key (for content moderation)
+OPENAI_API_KEY=""
+
+MEILISEARCH_HOST="http://localhost:7700"
+MEILISEARCH_MASTER_KEY=""
+MEILISEARCH_API_KEY=""
+
+# Vercel Blob Storage
+BLOB_READ_WRITE_TOKEN=""
+
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=""

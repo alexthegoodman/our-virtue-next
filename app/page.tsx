@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
-export default async function Profile() {
-  redirect("/salvation/believe-in-god");
+export default async function Home() {
+  redirect("/select-language");
 
   return <></>;
 }
