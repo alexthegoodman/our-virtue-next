@@ -20,11 +20,8 @@ export default function SelectLanguage() {
   const router = useRouter();
 
   const handleLanguageSelect = (languageCode: string) => {
-    if (languageCode === "en") {
-      router.push("/salvation/believe-in-god");
-    } else {
-      router.push(`/${languageCode}/salvation/believe-in-god`);
-    }
+    localStorage.setItem('selectedLanguage', languageCode);
+    router.push("/mood-ring");
   };
 
   return (
