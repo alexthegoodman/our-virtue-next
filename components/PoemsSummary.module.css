@@ -1,0 +1,279 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.header h1 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #5a6c7d;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.overview {
+  margin-bottom: 3rem;
+}
+
+.overview h2 {
+  color: #34495e;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.uniqueFeatures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.feature {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+}
+
+.feature h3 {
+  color: #2c3e50;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature p {
+  color: #5a6c7d;
+  font-size: 0.95rem;
+}
+
+.categories {
+  margin-bottom: 3rem;
+}
+
+.categories h2 {
+  color: #34495e;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.categoryCard {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.categoryCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  border-color: #3498db;
+}
+
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.categoryHeader h3 {
+  color: #2c3e50;
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.poemCount {
+  background: #3498db;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.description {
+  color: #5a6c7d;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.themes h4, .uniqueAspects h4 {
+  color: #34495e;
+  font-size: 0.9rem;
+  margin: 1rem 0 0.5rem 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.themeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.theme {
+  background: #ecf0f1;
+  color: #34495e;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.uniqueAspects ul {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.uniqueAspects li {
+  color: #5a6c7d;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+  line-height: 1.4;
+}
+
+.explore {
+  position: absolute;
+  bottom: 1rem;
+  right: 1.5rem;
+  color: #3498db;
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.categoryCard:hover .explore {
+  opacity: 1;
+}
+
+.framework {
+  margin-bottom: 3rem;
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+.framework h2 {
+  color: #34495e;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.frameworkGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.frameworkItem {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #e74c3c;
+}
+
+.frameworkItem h3 {
+  color: #e74c3c;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.frameworkItem p {
+  color: #5a6c7d;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.patterns {
+  margin-bottom: 2rem;
+}
+
+.patterns h2 {
+  color: #34495e;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.patternsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.pattern {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #27ae60;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  color: #5a6c7d;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.pattern strong {
+  color: #27ae60;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .categoryGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .uniqueFeatures,
+  .frameworkGrid,
+  .patternsList {
+    grid-template-columns: 1fr;
+  }
+  
+  .categoryCard {
+    padding: 1rem;
+  }
+  
+  .framework {
+    padding: 1.5rem;
+  }
+}
