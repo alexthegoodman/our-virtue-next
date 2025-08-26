@@ -326,7 +326,7 @@ export default function PoemsSummary() {
               </div>
 
               <div className={styles.uniqueAspects}>
-                <h4>What's Unique:</h4>
+                <h4>What&apos;s Unique:</h4>
                 <ul>
                   {category.uniqueAspects.map((aspect, index) => (
                     <li key={index}>{aspect}</li>
@@ -384,7 +384,7 @@ export default function PoemsSummary() {
         <h2>Recurring Messages</h2>
         <div className={styles.patternsList}>
           <div className={styles.pattern}>
-            <strong>God's Special Care for the Poor:</strong> Appears
+            <strong>God&apos;s Special Care for the Poor:</strong> Appears
             consistently across all categories
           </div>
           <div className={styles.pattern}>
