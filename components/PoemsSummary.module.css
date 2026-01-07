@@ -250,6 +250,30 @@
   color: #27ae60;
 }
 
+.uniqueInfo {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+}
+
+.uniqueInfo .left, .uniqueInfo .right {
+  width: calc(50% - 20px);
+}
+
+.why {
+  background-color: #9ec0d7;
+  border-radius: 25px;
+  padding: 40px;
+  margin-top: 25px;
+}
+
+.why p {
+  margin: 5px 0;
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
@@ -275,5 +299,13 @@
   
   .framework {
     padding: 1.5rem;
+  }
+
+  .uniqueInfo {
+    flex-direction: column;
+  }
+
+  .uniqueInfo .left, .uniqueInfo .right {
+    width: 100%;
   }
 }
