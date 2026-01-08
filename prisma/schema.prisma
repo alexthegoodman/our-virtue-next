@@ -234,3 +234,13 @@ enum ChurchMemberRole {
   MODERATOR
   ADMIN
 }
+
+model SwipeEvent {
+  id          String   @id @default(cuid())
+  poemSlug    String
+  stanzaSlug  String
+  direction   String   // "left" or "right"
+  createdAt   DateTime @default(now())
+
+  @@map("swipe_events")
+}
