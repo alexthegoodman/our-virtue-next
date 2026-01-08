@@ -212,54 +212,7 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
         </div>
       )}
 
-      <main className={styles.mainLayout}>
-        {currentPoems && (
-          <aside className={styles.sidebar}>
-            <section>
-              <div className={styles.chapterList}>
-                <ul>
-                  {poemList.map((chapter, i) => {
-                    return (
-                      <li
-                        key={`chapter${i}`}
-                        className={
-                          chapter.key === currentSection ? styles.selected : ""
-                        }
-                        onClick={() => handleChapterClick(chapter.key)}
-                      >
-                        {chapter.title}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-
-              <div className={styles.poemList}>
-                <ul>
-                  {currentPoems?.map((poem, i) => {
-                    return (
-                      <li
-                        key={`poem${i}`}
-                        className={
-                          poem.path === `/${currentSection}/${currentChapter}`
-                            ? styles.selected
-                            : ""
-                        }
-                        onClick={() => handlePoemClick(poem.path)}
-                      >
-                        {poem.title}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </section>
-          </aside>
-        )}
-        <article className={currentPoems ? styles.content : styles.fullContent}>
-          {children}
-        </article>
-      </main>
+      {children}
 
       <AuthModal
         isOpen={showAuthModal}
