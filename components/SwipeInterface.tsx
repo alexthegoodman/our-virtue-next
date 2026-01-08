@@ -75,7 +75,31 @@ export default function SwipeInterface({ data }: SwipeInterfaceProps) {
     updateUrl(randomIndex, 0);
   };
 
+  const recordSwipe = async (poemSlug: string, stanzaSlug: string, direction: 'left' | 'right') => {
+    try {
+      await fetch('/api/swipe-events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          poemSlug,
+          stanzaSlug,
+          direction,
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to record swipe:', error);
+    }
+  };
+
   const handleSwipeLeft = () => {
+    const currentPoem = allPoems.current[currentPoemIndex];
+    if (currentPoem) {
+       const currentStanza = currentPoem.poem.stanzas[currentStanzaIndex];
+       recordSwipe(currentPoem.slug, currentStanza.slug, 'left');
+    }
+
     // New Poem
     setDirection('left');
     setTimeout(() => {
@@ -85,6 +109,12 @@ export default function SwipeInterface({ data }: SwipeInterfaceProps) {
   };
 
   const handleSwipeRight = () => {
+    const currentPoem = allPoems.current[currentPoemIndex];
+    if (currentPoem) {
+        const currentStanza = currentPoem.poem.stanzas[currentStanzaIndex];
+        recordSwipe(currentPoem.slug, currentStanza.slug, 'right');
+    }
+
     // Next Stanza
     setDirection('right');
     setTimeout(() => {
@@ -213,10 +243,10 @@ export default function SwipeInterface({ data }: SwipeInterfaceProps) {
       
       <div style={{ position: 'absolute', bottom: '20px', display: 'flex', gap: '20px' }}>
         <button onClick={handleSwipeLeft} style={{ padding: '10px 20px', borderRadius: '20px', border: 'none', background: '#ff6b6b', color: 'white', fontWeight: 'bold' }}>
-           Pass (New Poem)
+           Later (New Poem)
         </button>
         <button onClick={handleSwipeRight} style={{ padding: '10px 20px', borderRadius: '20px', border: 'none', background: '#4ecdc4', color: 'white', fontWeight: 'bold' }}>
-           Like (Next Stanza)
+           Continue (Next Stanza)
         </button>
       </div>
     </div>
