@@ -70,13 +70,13 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
     <>
       <header className={styles.header}>
         <div className={styles.left}>
-          <section className={styles.brand}>
+          <Link href="/" className={styles.brand}>
             <img src="/logo.png" alt="Our Virtue Logo" />
             <div className={styles.brandText}>
               <h1>Our Virtue</h1>
               <h2>An Introduction to God</h2>
             </div>
-          </section>
+          </Link>
           <div className={styles.navLinks}>
             <Link href="/select-language">Poems</Link>
             <Link href="/poverty-data">Poverty Data</Link>
