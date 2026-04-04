@@ -273,19 +273,19 @@ export default function PoemsSummary() {
           </ul>
           <div className={styles.why}>
             <p>You may wonder what is the point to Our Virtue?</p>
-            <p><strong>It&apos;s for those who desire the whole truth, even if it is a lot to ask, so they can truly experience God - not a lukewarm appeasement or appeal, which has become most popular among Christians today</strong></p>
+            <p><strong>It&apos;s for those who desire the whole truth, even if it is a lot to ask, so they can truly experience God - not a lukewarm appeasement or appeal, which has become most popular today</strong></p>
           </div>
         </div>
         <div className={styles.left}>
           <h3>What Makes Our Virtue Unique</h3>
           <ul>
-            <li>Our Virtue admonishes churches for investing in themselves more than they give back, and encourages churches to keep politics out of sermons</li>
+            <li>Our Virtue encourages hard work, daily, for the sake of God and the poor</li>
+            <li>Our Virtue admonishes churches for investing in themselves more than they give back, and encourages churches to keep politics out of sermons (God is greater than any President, and faith more important than any policy)</li>
             <li>Our Virtue asks that people do not fight back or war with each other, even in the face of violent attacks</li>
-            <li>Our Virtue teaches a moderate, yet very strong, view on sexual ethics, substances, and law</li>
+            <li>Our Virtue teaches a moderate, yet very strong, view on sexual ethics, substances, and righteous law</li>
             <li>Our Virtue teaches constant forgiveness, yet to uphold the law of the land, for all people must decide where they draw the line between mercy and justice, and God will judge them accordingly</li>
             <li>Our Virtue doesn&apos;t hide from Jesus true teachings, but instead teaches them to the fullest</li>
             <li>Our Virtue doesn&apos;t want you to be alone on your path to saving the world from suffering, but to provide you with a way to accelerate your mission</li>
-            <li>Our Virtue encourages hard work, daily, for the sake of God and the poor</li>
             <li>Our Virtue calls those who want to dedicate their lives to giving back, giving them brothers and sisters who are equally devoted</li>
             <li>Our Virtue asks that most people give all they have to the poor, out of faith, without fear or greed</li>
             <li>Our Virtue teaches that only Jesus comes with the true Word of God, and all other Prophets, including Moses and Muhammad, received their revelations from angels only</li>
