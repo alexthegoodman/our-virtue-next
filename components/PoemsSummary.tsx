@@ -275,7 +275,7 @@ export default function PoemsSummary() {
             <p>Who is Our Virtue for?</p>
             <p><strong>Our Virtue is an introduction to God and is intended for anyone who is curious to learn about God and His teachings.</strong></p>
             <p>Who delivers this message?</p>
-            <p><strong>This message was delivered by a regular person who has a powerful connection with God and who believes that only Jesus spoke the Word of God, but many others came for God's sake.</strong></p>
+            <p><strong>This message was delivered by a regular person who has a powerful connection with God and who believes that only Jesus spoke the Word of God, but many others came for God&apos;s sake.</strong></p>
             <p>What does this message prophecy?</p>
             <p><strong>The time of Peace and Prosperity is near. People will be coming who have a connection with God through Jesus himself, so that they can finish the works of God and cause the world to believe.</strong></p>
           </div>
