@@ -253,50 +253,11 @@ export default function PoemsSummary() {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1>Welcome to Our Virtue</h1>
-        {/* <p className={styles.subtitle}>
+        <p className={styles.subtitle}>
           A modern collection of {totalPoems} devotional poems across{" "}
-          {categorySummaries.length} categories, bridging traditional Christian
-          teaching with contemporary social concerns
-        </p> */}
+          {categorySummaries.length} categories, intended as an introduction to God.
+        </p>
       </header>
-
-      <section className={styles.uniqueInfo}>
-        <div className={styles.right}>
-          <h3>What you already know from Our Virtue</h3>
-          <ul>
-            <li>Jesus is the Messiah, the Son of God, and the Savior of Mankind</li>
-            <li>Faith can move mountains</li>
-            <li>Love is the greatest commandment</li>
-            <li>Forgiving others is the way to God&apos;s forgiveness</li>
-            <li>Evil people have light in them and God cares for them also</li>
-            <li>God&apos;s Children are peacemakers</li>
-          </ul>
-          <div className={styles.why}>
-            <p>Who is Our Virtue for?</p>
-            <p><strong>Our Virtue is an introduction to God and is intended for anyone who is curious to learn about God and His teachings.</strong></p>
-            <p>Who delivers this message?</p>
-            <p><strong>This message was delivered by a regular person who has a powerful connection with God and who believes that only Jesus spoke the Word of God, but many others came for God&apos;s sake.</strong></p>
-            <p>What does this message prophecy?</p>
-            <p><strong>The time of Peace and Prosperity is near. People will be coming who have a connection with God through Jesus himself, so that they can finish the works of God and cause the world to believe.</strong></p>
-          </div>
-        </div>
-        <div className={styles.left}>
-          <h3>What Makes Our Virtue Unique</h3>
-          <ul>
-            <li>Our Virtue encourages hard work, daily, for the sake of God and the poor</li>
-            <li>Our Virtue asks that most people give all they have to the poor, out of faith, without fear or greed</li>
-            <li>Our Virtue admonishes churches for investing in themselves more than they give back, and encourages churches to keep politics out of sermons (God is greater than any President, and faith more important than any policy)</li>
-            <li>Our Virtue asks that people do not fight back or war with each other, even in the face of violent attacks</li>
-            <li>Our Virtue teaches a moderate, yet very strong, view on sexual ethics, substances, and righteous law</li>
-            <li>Our Virtue teaches constant forgiveness, yet to uphold the law of the land, for all people must decide where they draw the line between mercy and justice, and God will judge them accordingly</li>
-            <li>Our Virtue doesn&apos;t hide from Jesus true teachings, but instead teaches them to the fullest</li>
-            <li>Our Virtue doesn&apos;t want you to be alone on your path to saving the world from suffering, but to provide you with a way to accelerate your mission</li>
-            <li>Our Virtue calls those who want to dedicate their lives to giving back, giving them brothers and sisters who are equally devoted</li>
-            <li>Our Virtue teaches that only Jesus comes with the true Word of God, and all other Prophets, including Moses and Muhammad, received their revelations from angels only</li>
-            <li>Our Virtue asks that you share it with your children, bringing God&apos;s glory to fill your house, and carrying the sacred mission forward for generations to come</li>
-          </ul>
-        </div>
-      </section>
 
       <section className={styles.categories}>
         <h2>Explore by Category</h2>
