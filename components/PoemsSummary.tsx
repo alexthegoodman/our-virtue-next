@@ -257,6 +257,14 @@ export default function PoemsSummary() {
           A modern collection of {totalPoems} devotional poems across{" "}
           {categorySummaries.length} categories, intended as an introduction to God.
         </p>
+        <p className={styles.subtitle}>
+          Our Virtue was inspired by prophetic revelations from a 6-7 year period, then written down
+          over the course of a single year. These revelations confirmed the Gospel as the sole Word of God.
+          These poems put to rest many issues surrounding law, science, and suffering.
+        </p>
+        <p className={styles.subtitle}>
+          The revelations cannot be proven perfect, but you will find secrets of the Kingdom in every poem.
+        </p>
       </header>
 
       <section className={styles.categories}>
