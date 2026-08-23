@@ -1,3 +1,14 @@
+/* .page {
+  min-height: 100vh;
+  width: 100%;
+  background: #faf8f3;
+  color: #161616;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+} */
+
 .page {
   min-height: calc(100% - 80px);
   width: 100%;
@@ -35,13 +46,14 @@
   font-size: 0.78rem;
   letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: #c9a86a;
+  font-weight: 600;
+  color: #96742f;
 }
 
 .rule {
   width: 56px;
   height: 1px;
-  background: #c9a86a;
+  background: #96742f;
   margin: 28px 0 32px;
 }
 
@@ -51,19 +63,35 @@
   font-style: italic;
   line-height: 1.15;
   margin: 0 0 28px;
-  /* color: #ffffff; */
-  /* color: #060606; */
-  color: #bd964d;
+  color: #96742f;
 }
 
 .copy {
   font-size: 1.02rem;
   line-height: 1.75;
-  /* color: #c7c4bc; */
-  /* color: #060606; */
-  color: #bd964d;
+  color: #3a362e;
   max-width: 620px;
   margin: 0 0 18px;
+}
+
+.details {
+  background: none;
+  border: none;
+  color: #96742f;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: #d3b876;
+  cursor: pointer;
+  margin: 4px 0 32px;
+  padding: 4px;
+  font-family: inherit;
+}
+
+.details:hover {
+  color: #161616;
+  text-decoration-color: #161616;
 }
 
 .stats {
@@ -74,11 +102,11 @@
   font-size: 0.8rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #8f8b80;
+  color: #6f6a5c;
 }
 
 .dot {
-  color: #c9a86a;
+  color: #96742f;
 }
 
 .form {
@@ -92,14 +120,14 @@
   font-size: 0.78rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #c9a86a;
+  color: #96742f;
   margin-bottom: 14px;
 }
 
 .inputRow {
   width: 100%;
   display: flex;
-  border: 1px solid #3a3833;
+  border: 1px solid #161616;
 }
 
 .input {
@@ -107,25 +135,25 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #f2f0eb;
+  color: #161616;
   font-size: 1rem;
   padding: 16px 18px;
   font-family: inherit;
 }
 
 .input::placeholder {
-  color: #6b6860;
+  color: #a39d8c;
 }
 
 .input:focus {
-  background: #0e0d0b;
+  background: #f0ecdf;
 }
 
 .submit {
   background: transparent;
   border: none;
-  border-left: 1px solid #3a3833;
-  color: #c9a86a;
+  border-left: 1px solid #161616;
+  color: #96742f;
   font-size: 0.85rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -135,8 +163,8 @@
 }
 
 .submit:hover:not(:disabled) {
-  background: #c9a86a;
-  color: #060606;
+  background: #96742f;
+  color: #faf8f3;
 }
 
 .submit:disabled {
@@ -145,26 +173,26 @@
 }
 
 .errorText {
-  color: #d98c7a;
+  color: #8c3f2c;
   font-size: 0.85rem;
   margin-top: 14px;
 }
 
 .fineprint {
   font-size: 0.78rem;
-  color: #6b6860;
+  color: #857f6f;
   margin-top: 18px;
 }
 
 .skip {
   background: none;
   border: none;
-  color: #8f8b80;
+  color: #6f6a5c;
   font-size: 0.85rem;
   letter-spacing: 0.04em;
   text-decoration: underline;
   text-underline-offset: 4px;
-  text-decoration-color: #4a473f;
+  text-decoration-color: #c9c3b0;
   cursor: pointer;
   margin-top: 40px;
   padding: 4px;
@@ -172,8 +200,8 @@
 }
 
 .skip:hover {
-  color: #c9a86a;
-  text-decoration-color: #c9a86a;
+  color: #96742f;
+  text-decoration-color: #96742f;
 }
 
 @media (max-width: 560px) {
@@ -187,7 +215,7 @@
 
   .submit {
     border-left: none;
-    border-top: 1px solid #3a3833;
+    border-top: 1px solid #161616;
     padding: 14px;
   }
 

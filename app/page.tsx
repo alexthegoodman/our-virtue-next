@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Cormorant_Garamond } from "next/font/google";
 import { poemList } from "@/content/poems";
+import WhatsInsideModal from "@/components/WhatsInsideModal";
 import styles from "./page.module.css";
 
 const serif = Cormorant_Garamond({
@@ -22,6 +23,7 @@ export default function Home() {
     "idle"
   );
   const [error, setError] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const totalPoems = poemList.reduce(
     (sum, chapter) => sum + chapter.items.length,
@@ -84,6 +86,14 @@ export default function Home() {
           science, and suffering.
         </p>
 
+        <button
+          className={styles.details}
+          onClick={() => setShowModal(true)}
+          type="button"
+        >
+          See what&rsquo;s inside
+        </button>
+
         <form className={styles.form} onSubmit={handleSubmit}>
           <label htmlFor="email" className={styles.label}>
             Enter your email to begin
@@ -128,6 +138,11 @@ export default function Home() {
           Skip and continue without email
         </button>
       </div>
+
+      <WhatsInsideModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+      />
     </div>
   );
 }
