@@ -1,39 +1,133 @@
-// // import fs from 'fs';
-// // import path from 'path';
-// import SwipeInterface from "@/components/SwipeInterface";
-// import stanzaData from "../content/stanzas.json";
-// import Link from "next/link";
-// import { Suspense } from "react";
+"use client";
 
-// export default async function Home() {
-//   // const filePath = path.join(process.cwd(), 'content', 'stanzas.json');
-//   // const fileContents = fs.readFileSync(filePath, 'utf8');
-//   // const stanzaData = JSON.parse(fileContents);
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Cormorant_Garamond } from "next/font/google";
+import { poemList } from "@/content/poems";
+import styles from "./page.module.css";
 
-//   return (
-//     <>
-//       <main style={{ height: '100%', minHeight: "76vh", width: '100%', overflow: 'hidden', position: 'relative' }}>
-//         <Suspense fallback={<div>Loading poems...</div>}>
-//           <SwipeInterface data={stanzaData} />
-//         </Suspense>
-//       </main>
-//       <div style={{ margin: "20px auto", width: "300px", display: "flex", flexDirection: "column", gap: "12px" }}>
-//         <Link href="/summary" style={{ color: "#666" }}>Summary and Explore by Category</Link>
-//         <Link href="/free-book" style={{ color: "#666" }}>Request a free physical copy</Link>
-//       </div>
-//     </>
-//   );
-// }
+const serif = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+});
 
-import CategoryLayout from "@/components/CategoryLayout";
-import PoemsSummary from "@/components/PoemsSummary";
+// const ENTRY_PATH = "/select-language";
+const ENTRY_PATH = "/salvation/believe-in-god";
 
 export default function Home() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "error">(
+    "idle"
+  );
+  const [error, setError] = useState("");
+
+  const totalPoems = poemList.reduce(
+    (sum, chapter) => sum + chapter.items.length,
+    0
+  );
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("submitting");
+    setError("");
+
+    try {
+      const response = await fetch("/api/email-subscribers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "landing_gate" }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || "Something went wrong.");
+      }
+
+      router.push(ENTRY_PATH);
+    } catch (err) {
+      setStatus("error");
+      setError(
+        err instanceof Error ? err.message : "Something went wrong."
+      );
+    }
+  };
+
+  const handleSkip = () => {
+    router.push(ENTRY_PATH);
+  };
+
   return (
-    <>
-      <CategoryLayout>
-        <PoemsSummary />
-      </CategoryLayout>
-    </>
+    <div className={styles.page}>
+      <div className={styles.frame}>
+        <div className={styles.brand}>
+          <img
+            src="/logo.png"
+            alt="Our Virtue"
+            className={styles.logo}
+          />
+          <span className={styles.kicker}>Our Virtue</span>
+        </div>
+
+        <div className={styles.rule} />
+
+        <h1 className={`${styles.title} ${serif.className}`}>
+          An Introduction to God
+        </h1>
+
+        <p className={styles.copy}>
+          Our Virtue was inspired by prophetic revelations gathered over a
+          period of six to seven years, then written down over the course of
+          a single year. These revelations confirm the Gospel as the sole
+          Word of God and put to rest many questions surrounding law,
+          science, and suffering.
+        </p>
+
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <label htmlFor="email" className={styles.label}>
+            Enter your email to begin
+          </label>
+          <div className={styles.inputRow}>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              required
+              disabled={status === "submitting"}
+              className={styles.input}
+            />
+            <button
+              type="submit"
+              className={styles.submit}
+              disabled={status === "submitting"}
+            >
+              {status === "submitting" ? "Entering" : "Enter"}
+            </button>
+          </div>
+          {status === "error" && (
+            <p className={styles.errorText}>{error}</p>
+          )}
+          <p className={styles.fineprint}>
+            Used to build relationships and community with you and others.
+          </p>
+        </form>
+
+        <div className={styles.stats}>
+          <span>{totalPoems} Poems</span>
+          <span className={styles.dot}>&middot;</span>
+          <span>{poemList.length} Categories</span>
+          <span className={styles.dot}>&middot;</span>
+          <span>10 Languages</span>
+        </div>
+
+        <button className={styles.skip} onClick={handleSkip} type="button">
+          Skip and continue without email
+        </button>
+      </div>
+    </div>
   );
 }

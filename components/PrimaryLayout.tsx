@@ -66,6 +66,12 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
     router.push(finalPath);
   };
 
+  const isLandingGate = pathname === "/";
+
+  if (isLandingGate) {
+    return <>{children}</>;
+  }
+
   return (
     <>
       <header className={styles.header}>

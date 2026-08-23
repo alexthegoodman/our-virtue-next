@@ -235,6 +235,15 @@ enum ChurchMemberRole {
   ADMIN
 }
 
+model EmailSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String?  // where the email was captured, e.g. "landing_gate"
+  createdAt DateTime @default(now())
+
+  @@map("email_subscribers")
+}
+
 model SwipeEvent {
   id          String   @id @default(cuid())
   poemSlug    String
