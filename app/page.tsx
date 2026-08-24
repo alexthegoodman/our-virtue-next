@@ -78,12 +78,21 @@ export default function Home() {
           An Introduction to God
         </h1>
 
-        <p className={styles.copy}>
+        {/* <p className={styles.copy}>
           Our Virtue was inspired by prophetic revelations gathered over a
           period of six to seven years, then written down over the course of
           a single year. These revelations confirm the Gospel as the sole
           Word of God and put to rest many questions surrounding law,
           science, and suffering.
+        </p> */}
+
+        <p className={styles.copy}>
+          The Secrets of the Kingdom of God are revealed to those who have faith in Jesus.
+          Jesus is still alive today, bringing people closer to God! After I gave all my belongings away,
+          I wrote this book, containing all the things I had heard from God over the 6 years previous.
+          In this collection you will find strnegth in love and forgiveness and peace, with answers
+          to questions on suffering, law, and science. You are welcome to read on, and see if I am correct!
+          Email is offered to grow the community. Thank you.
         </p>
 
         <button
