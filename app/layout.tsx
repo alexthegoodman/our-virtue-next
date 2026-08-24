@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClientProviders } from "./providers";
 import PrimaryLayout from "@/components/PrimaryLayout";
 import { Analytics } from "@vercel/analytics/next";
+import MetaPixel from "@/components/MetaPixel";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
           <PrimaryLayout>{children}</PrimaryLayout>
         </ClientProviders>
         <Analytics />
+        <MetaPixel />
       </body>
     </html>
   );

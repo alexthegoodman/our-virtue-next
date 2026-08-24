@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Cormorant_Garamond } from "next/font/google";
 import { poemList } from "@/content/poems";
 import WhatsInsideModal from "@/components/WhatsInsideModal";
+import * as fpixel from "@/lib/fpixel";
 import styles from "./page.module.css";
 
 const serif = Cormorant_Garamond({
@@ -46,6 +47,8 @@ export default function Home() {
         const data = await response.json().catch(() => ({}));
         throw new Error(data.error || "Something went wrong.");
       }
+
+      fpixel.event("Lead", { content_name: "landing_gate" });
 
       router.push(ENTRY_PATH);
     } catch (err) {
