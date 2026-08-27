@@ -14,7 +14,7 @@ export const EMAIL_SEQUENCE_COPY: Record<
   Record<string, EmailSequenceCopy>
 > = {
   A: {
-    "Read on my own": {
+    "Read on my own!": {
       subject: "Reading at your own pace",
       heading: "However you read, welcome",
       paragraphs: [
