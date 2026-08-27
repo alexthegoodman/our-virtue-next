@@ -137,13 +137,6 @@ export default function Home() {
               disabled={status === "submitting"}
               className={styles.input}
             />
-            <button
-              type="submit"
-              className={styles.submit}
-              disabled={status === "submitting" || !variant || !answer}
-            >
-              {status === "submitting" ? "Entering" : "Enter"}
-            </button>
           </div>
 
           {variantConfig && (
@@ -169,6 +162,14 @@ export default function Home() {
               </div>
             </fieldset>
           )}
+
+          <button
+            type="submit"
+            className={styles.submit}
+            disabled={status === "submitting" || !variant || !answer}
+          >
+            {status === "submitting" ? "Entering" : "Enter"}
+          </button>
 
           {status === "error" && (
             <p className={styles.errorText}>{error}</p>
