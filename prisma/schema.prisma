@@ -236,12 +236,57 @@ enum ChurchMemberRole {
 }
 
 model EmailSubscriber {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  source    String?  // where the email was captured, e.g. "landing_gate"
-  createdAt DateTime @default(now())
+  id        String        @id @default(cuid())
+  email     String        @unique
+  source    String?       // where the email was captured, e.g. "landing_gate"
+  variant   SignupVariant? // which A/B test variant was shown at signup
+  answer    String?       // the option text they selected for that variant's question
+  createdAt DateTime      @default(now())
+
+  scheduledEmails ScheduledEmail[]
 
   @@map("email_subscribers")
+}
+
+enum SignupVariant {
+  A
+  B
+  C
+}
+
+// Rolling counters for the signup form personalization A/B test.
+// One row per variant, incremented on form view and on first-time submission.
+model SignupVariantStat {
+  variant     SignupVariant @id
+  views       Int           @default(0)
+  submissions Int           @default(0)
+  updatedAt   DateTime      @updatedAt
+
+  @@map("signup_variant_stats")
+}
+
+enum ScheduledEmailStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+// Personalized follow-up email queued after signup, sent by the cron worker
+// at a randomized daytime time based on the subscriber's variant/answer.
+model ScheduledEmail {
+  id            String               @id @default(cuid())
+  subscriber    EmailSubscriber      @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+  subscriberId  String
+  variant       SignupVariant
+  answer        String
+  scheduledFor  DateTime
+  sentAt        DateTime?
+  status        ScheduledEmailStatus @default(PENDING)
+  lastError     String?
+  createdAt     DateTime             @default(now())
+
+  @@index([status, scheduledFor])
+  @@map("scheduled_emails")
 }
 
 model SwipeEvent {

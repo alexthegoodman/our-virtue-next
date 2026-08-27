@@ -3,9 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Cormorant_Garamond } from "next/font/google";
+import posthog from "posthog-js";
 import { poemList } from "@/content/poems";
 import WhatsInsideModal from "@/components/WhatsInsideModal";
 import * as fpixel from "@/lib/fpixel";
+import { useSignupVariant } from "@/hooks/useSignupVariant";
+import { SIGNUP_VARIANTS } from "@/lib/signupVariants";
 import styles from "./page.module.css";
 
 const serif = Cormorant_Garamond({
@@ -19,7 +22,9 @@ const ENTRY_PATH = "/salvation/believe-in-god";
 
 export default function Home() {
   const router = useRouter();
+  const variant = useSignupVariant();
   const [email, setEmail] = useState("");
+  const [answer, setAnswer] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "error">(
     "idle"
   );
@@ -31,8 +36,12 @@ export default function Home() {
     0
   );
 
+  const variantConfig = variant ? SIGNUP_VARIANTS[variant] : null;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!variant || !answer) return;
+
     setStatus("submitting");
     setError("");
 
@@ -40,7 +49,12 @@ export default function Home() {
       const response = await fetch("/api/email-subscribers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source: "landing_gate" }),
+        body: JSON.stringify({
+          email,
+          source: "landing_gate",
+          variant,
+          answer,
+        }),
       });
 
       if (!response.ok) {
@@ -49,6 +63,7 @@ export default function Home() {
       }
 
       fpixel.event("Lead", { content_name: "landing_gate" });
+      posthog.capture("signup_form_submitted", { variant, answer });
 
       router.push(ENTRY_PATH);
     } catch (err) {
@@ -125,11 +140,36 @@ export default function Home() {
             <button
               type="submit"
               className={styles.submit}
-              disabled={status === "submitting"}
+              disabled={status === "submitting" || !variant || !answer}
             >
               {status === "submitting" ? "Entering" : "Enter"}
             </button>
           </div>
+
+          {variantConfig && (
+            <fieldset className={styles.question}>
+              <legend className={styles.questionLabel}>
+                {variantConfig.question}
+              </legend>
+              <div className={styles.options}>
+                {variantConfig.options.map((option) => (
+                  <label key={option} className={styles.option}>
+                    <input
+                      type="radio"
+                      name="signup-answer"
+                      value={option}
+                      checked={answer === option}
+                      onChange={() => setAnswer(option)}
+                      disabled={status === "submitting"}
+                      required
+                    />
+                    <span>{option}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          )}
+
           {status === "error" && (
             <p className={styles.errorText}>{error}</p>
           )}

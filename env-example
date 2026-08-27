@@ -21,3 +21,12 @@ NEXT_PUBLIC_POSTHOG_HOST=""
 
 # Meta (Facebook) Pixel ID, from Events Manager
 NEXT_PUBLIC_META_PIXEL_ID=""
+
+# Resend (personalized signup follow-up emails)
+RESEND_API_KEY=""
+RESEND_FROM_EMAIL="Our Virtue <hello@our-virtue.com>"
+
+# Shared secret Vercel Cron sends as `Authorization: Bearer <value>` when
+# calling /api/cron/send-scheduled-emails. Leave blank to disable the check
+# locally, but always set it in production.
+CRON_SECRET=""

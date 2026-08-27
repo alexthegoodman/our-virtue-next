@@ -1,0 +1,167 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+.error {
+  color: #dc3545;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.header h1 {
+  color: #2c3e50;
+  font-size: 2.2rem;
+  margin: 0;
+}
+
+.exportButton {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  background: white;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.exportButton:hover {
+  background: #007bff;
+  color: white;
+}
+
+.testMeta {
+  margin: 1rem 0 2rem;
+  color: #6c757d;
+  font-size: 0.95rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.25rem;
+}
+
+.variantLabel {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.question {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 1rem;
+}
+
+.metrics {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.metric {
+  text-align: left;
+}
+
+.metricNumber {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.metricLabel {
+  display: block;
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+
+.progressTrack {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #e9ecef;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.progressFill {
+  height: 100%;
+  background: #28a745;
+}
+
+.progressLabel {
+  font-size: 0.78rem;
+  color: #6c757d;
+  margin: -1rem 0 1rem;
+}
+
+.distribution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.distRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.distOption {
+  color: #2c3e50;
+}
+
+.distBarTrack {
+  grid-column: 1 / -1;
+  height: 6px;
+  border-radius: 3px;
+  background: #f1f1f1;
+  overflow: hidden;
+}
+
+.distBarFill {
+  height: 100%;
+  background: #96742f;
+}
+
+.distCount {
+  color: #6c757d;
+  white-space: nowrap;
+}
