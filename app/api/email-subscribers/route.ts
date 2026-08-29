@@ -6,6 +6,7 @@ import {
   SignupVariantKey,
 } from '@/lib/signupVariants';
 import { computeRandomDaytimeSendTime } from '@/lib/scheduleEmail';
+import { computeFirstVerseEmailTime } from '@/lib/scheduleVerseEmail';
 
 export async function POST(request: NextRequest) {
   try {
@@ -62,6 +63,7 @@ export async function POST(request: NextRequest) {
       create: {
         email,
         source: source || 'landing_gate',
+        nextVerseEmailAt: computeFirstVerseEmailTime(),
         ...(hasVariant ? { variant: validatedVariant } : {}),
         ...(hasVariant && answer ? { answer } : {}),
       },

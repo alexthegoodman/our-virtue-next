@@ -21,7 +21,11 @@ export async function GET(request: NextRequest) {
   }
 
   const due = await prisma.scheduledEmail.findMany({
-    where: { status: "PENDING", scheduledFor: { lte: new Date() } },
+    where: {
+      status: "PENDING",
+      scheduledFor: { lte: new Date() },
+      subscriber: { unsubscribedAt: null },
+    },
     include: { subscriber: true },
     orderBy: { scheduledFor: "asc" },
     take: BATCH_SIZE,

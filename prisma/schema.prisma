@@ -243,8 +243,13 @@ model EmailSubscriber {
   answer    String?       // the option text they selected for that variant's question
   createdAt DateTime      @default(now())
 
+  unsubscribedAt   DateTime? // set when they click unsubscribe; stops all future sends
+  nextVerseEmailAt DateTime? // when the recurring verse email is next due
+  lastVerseEmailAt DateTime? // when the recurring verse email was last sent
+
   scheduledEmails ScheduledEmail[]
 
+  @@index([unsubscribedAt, nextVerseEmailAt])
   @@map("email_subscribers")
 }
 

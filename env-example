@@ -27,6 +27,15 @@ RESEND_API_KEY=""
 RESEND_FROM_EMAIL="Our Virtue <hello@our-virtue.com>"
 
 # Shared secret Vercel Cron sends as `Authorization: Bearer <value>` when
-# calling /api/cron/send-scheduled-emails. Leave blank to disable the check
-# locally, but always set it in production.
+# calling /api/cron/send-scheduled-emails and /api/cron/send-verse-emails.
+# Leave blank to disable the check locally, but always set it in production.
 CRON_SECRET=""
+
+# Used to build absolute links (read-more, unsubscribe) in the recurring
+# verse email. Defaults to https://our-virtue.com if unset.
+NEXT_PUBLIC_SITE_URL="https://our-virtue.com"
+
+# How often (in days) each subscriber gets the recurring verse email, and
+# how many days after signup the first one goes out. Defaults: 3 and 1.
+VERSE_EMAIL_INTERVAL_DAYS="3"
+VERSE_EMAIL_FIRST_SEND_DELAY_DAYS="1"
