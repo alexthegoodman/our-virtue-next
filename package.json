@@ -17,6 +17,7 @@
     "@posthog/react": "^1.10.4",
     "@prisma/client": "^6.13.0",
     "@react-email/components": "^1.0.12",
+    "@react-email/render": "2.0.6",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/mapbox-gl": "^3.4.1",
