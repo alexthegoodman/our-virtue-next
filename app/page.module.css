@@ -255,3 +255,76 @@
     justify-content: center;
   }
 }
+
+.about {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  padding: 72px 24px 96px;
+  background: #f2ecdd;
+  border-top: 1px solid rgba(22, 22, 22, 0.08);
+  margin: 0 auto 25px auto;
+}
+
+.aboutFrame {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.aboutPhoto {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #96742f;
+  margin-bottom: 26px;
+}
+
+.aboutKicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #96742f;
+  margin-bottom: 14px;
+}
+
+.aboutName {
+  font-size: 2rem;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.15;
+  margin: 0 0 24px;
+  color: #96742f;
+}
+
+.aboutCopy {
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: #3a362e;
+  max-width: 560px;
+  margin: 0 0 18px;
+}
+
+.aboutSignature {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6f6a5c;
+  margin-top: 8px;
+}
+
+@media (max-width: 560px) {
+  .aboutPhoto {
+    width: 104px;
+    height: 104px;
+  }
+
+  .aboutName {
+    font-size: 1.7rem;
+  }
+}

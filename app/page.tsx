@@ -87,6 +87,7 @@ export default function Home() {
   };
 
   return (
+    <>
     <div className={styles.page}>
       <div className={styles.frame}>
         <div className={styles.brand}>
@@ -234,5 +235,43 @@ export default function Home() {
         onClose={() => setShowModal(false)}
       />
     </div>
+
+    <section className={styles.about}>
+      <div className={styles.aboutFrame}>
+        <img
+          src="/alex-woodman-our-virtue.jpg"
+          alt="Alex Woodman, founder of Our Virtue"
+          className={styles.aboutPhoto}
+        />
+        <span className={styles.aboutKicker}>About the Founder</span>
+        <h2 className={`${styles.aboutName} ${serif.className}`}>
+          Alex Woodman
+        </h2>
+        <p className={styles.aboutCopy}>
+          I didn&rsquo;t arrive at this book through study. I arrived at it
+          through fire. Across my life I&rsquo;ve walked through real
+          suffering - loss, uncertainty, seasons where faith was the
+          only thing left to hold onto. And in that fire, God kept showing
+          up: answered prayers with no reasonable explanation, moments too
+          specific and too timed to call coincidence. I can only call them
+          miracles.
+        </p>
+        <p className={styles.aboutCopy}>
+          Our Virtue grew out of those years. It isn&rsquo;t a theory about
+          God - it&rsquo;s a record of what happened when I gave
+          everything away and trusted Him with the rest.
+        </p>
+        <p className={styles.aboutCopy}>
+          Now I&rsquo;m building something bigger than a book: a real
+          community of faithful believers living out Jesus&rsquo; teachings
+          together, in person, online, and in the quiet daily choices
+          between. If that&rsquo;s you, I&rsquo;d love to have you along.
+        </p>
+        <span className={styles.aboutSignature}>
+          &mdash; Alex, Founder of Our Virtue
+        </span>
+      </div>
+    </section>
+    </>
   );
 }
