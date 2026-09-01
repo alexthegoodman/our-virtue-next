@@ -1,10 +1,6 @@
 {
   "crons": [
     {
-      "path": "/api/cron/send-scheduled-emails",
-      "schedule": "*/12 * * * *"
-    },
-    {
       "path": "/api/cron/send-verse-emails",
       "schedule": "0 * * * *"
     }

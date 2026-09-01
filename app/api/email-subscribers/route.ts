@@ -5,12 +5,24 @@ import {
   isValidSignupAnswer,
   SignupVariantKey,
 } from '@/lib/signupVariants';
-import { computeRandomDaytimeSendTime } from '@/lib/scheduleEmail';
+import {
+  isStudyGroupPreference,
+  isEmailPreference,
+  StudyGroupPreferenceKey,
+  EmailPreferenceKey,
+} from '@/lib/subscriberPreferences';
 import { computeFirstVerseEmailTime } from '@/lib/scheduleVerseEmail';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, source, variant, answer } = await request.json();
+    const {
+      email,
+      source,
+      variant,
+      answer,
+      studyGroupPreference,
+      emailPreference,
+    } = await request.json();
 
     if (!email || typeof email !== 'string') {
       return NextResponse.json(
@@ -50,44 +62,81 @@ export async function POST(request: NextRequest) {
     }
     const hasVariant = validatedVariant !== null;
 
+    // Both preference fields are optional.
+    let validatedStudyGroupPreference: StudyGroupPreferenceKey | null = null;
+    if (studyGroupPreference !== undefined && studyGroupPreference !== null) {
+      if (!isStudyGroupPreference(studyGroupPreference)) {
+        return NextResponse.json(
+          { error: 'Invalid study group preference' },
+          { status: 400 }
+        );
+      }
+      validatedStudyGroupPreference = studyGroupPreference;
+    }
+
+    let validatedEmailPreference: EmailPreferenceKey | null = null;
+    if (emailPreference !== undefined && emailPreference !== null) {
+      if (!isEmailPreference(emailPreference)) {
+        return NextResponse.json(
+          { error: 'Invalid email preference' },
+          { status: 400 }
+        );
+      }
+      validatedEmailPreference = emailPreference;
+    }
+
     const existing = await prisma.emailSubscriber.findUnique({
       where: { email },
     });
+
+    // Only the recurring verse email is automated. It's sent unless the
+    // subscriber asked for direct outreach or nothing instead; unspecified
+    // defaults to verses, matching prior behavior.
+    const wantsVerses =
+      validatedEmailPreference === null ||
+      validatedEmailPreference === 'VERSES';
 
     const subscriber = await prisma.emailSubscriber.upsert({
       where: { email },
       update: {
         ...(hasVariant ? { variant: validatedVariant } : {}),
         ...(hasVariant && answer ? { answer } : {}),
+        ...(validatedStudyGroupPreference
+          ? { studyGroupPreference: validatedStudyGroupPreference }
+          : {}),
+        ...(validatedEmailPreference
+          ? {
+              emailPreference: validatedEmailPreference,
+              nextVerseEmailAt: wantsVerses
+                ? (existing?.nextVerseEmailAt ?? computeFirstVerseEmailTime())
+                : null,
+            }
+          : {}),
       },
       create: {
         email,
         source: source || 'landing_gate',
-        nextVerseEmailAt: computeFirstVerseEmailTime(),
+        nextVerseEmailAt: wantsVerses ? computeFirstVerseEmailTime() : null,
         ...(hasVariant ? { variant: validatedVariant } : {}),
         ...(hasVariant && answer ? { answer } : {}),
+        ...(validatedStudyGroupPreference
+          ? { studyGroupPreference: validatedStudyGroupPreference }
+          : {}),
+        ...(validatedEmailPreference
+          ? { emailPreference: validatedEmailPreference }
+          : {}),
       },
     });
 
-    // Only count first-time signups toward the conversion-rate denominator,
-    // and only queue one follow-up email per subscriber.
+    // Only count first-time signups toward the conversion-rate denominator.
+    // The personalized intro-email sequence has been retired in favor of
+    // manual outreach + the recurring verse email above.
     if (!existing && validatedVariant) {
       await prisma.signupVariantStat.upsert({
         where: { variant: validatedVariant },
         update: { submissions: { increment: 1 } },
         create: { variant: validatedVariant, views: 0, submissions: 1 },
       });
-
-      if (answer) {
-        await prisma.scheduledEmail.create({
-          data: {
-            subscriberId: subscriber.id,
-            variant: validatedVariant,
-            answer,
-            scheduledFor: computeRandomDaytimeSendTime(),
-          },
-        });
-      }
     }
 
     return NextResponse.json({ success: true });

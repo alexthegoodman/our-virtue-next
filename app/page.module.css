@@ -125,7 +125,7 @@
 }
 
 .inputRow {
-  width: 100%;
+  width: 90%;
   display: flex;
   border: 1px solid #161616;
 }
@@ -174,7 +174,7 @@
 }
 
 .question {
-  width: 100%;
+  width: 90%;
   border: none;
   padding: 24px 0 0;
   margin: 25px 0 0 0;

@@ -7,8 +7,14 @@ import posthog from "posthog-js";
 import { poemList } from "@/content/poems";
 import WhatsInsideModal from "@/components/WhatsInsideModal";
 import * as fpixel from "@/lib/fpixel";
-import { useSignupVariant } from "@/hooks/useSignupVariant";
-import { SIGNUP_VARIANTS } from "@/lib/signupVariants";
+import {
+  STUDY_GROUP_PREFERENCES,
+  STUDY_GROUP_PREFERENCE_KEYS,
+  EMAIL_PREFERENCES,
+  EMAIL_PREFERENCE_KEYS,
+  StudyGroupPreferenceKey,
+  EmailPreferenceKey,
+} from "@/lib/subscriberPreferences";
 import styles from "./page.module.css";
 
 const serif = Cormorant_Garamond({
@@ -22,9 +28,11 @@ const ENTRY_PATH = "/salvation/believe-in-god";
 
 export default function Home() {
   const router = useRouter();
-  const variant = useSignupVariant();
   const [email, setEmail] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [studyGroupPreference, setStudyGroupPreference] =
+    useState<StudyGroupPreferenceKey | "">("");
+  const [emailPreference, setEmailPreference] =
+    useState<EmailPreferenceKey | "">("");
   const [status, setStatus] = useState<"idle" | "submitting" | "error">(
     "idle"
   );
@@ -36,11 +44,8 @@ export default function Home() {
     0
   );
 
-  const variantConfig = variant ? SIGNUP_VARIANTS[variant] : null;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!variant || !answer) return;
 
     setStatus("submitting");
     setError("");
@@ -52,8 +57,8 @@ export default function Home() {
         body: JSON.stringify({
           email,
           source: "landing_gate",
-          variant,
-          answer,
+          ...(studyGroupPreference ? { studyGroupPreference } : {}),
+          ...(emailPreference ? { emailPreference } : {}),
         }),
       });
 
@@ -63,7 +68,10 @@ export default function Home() {
       }
 
       fpixel.event("Lead", { content_name: "landing_gate" });
-      posthog.capture("signup_form_submitted", { variant, answer });
+      posthog.capture("signup_form_submitted", {
+        studyGroupPreference: studyGroupPreference || undefined,
+        emailPreference: emailPreference || undefined,
+      });
 
       router.push(ENTRY_PATH);
     } catch (err) {
@@ -104,13 +112,24 @@ export default function Home() {
           science, and suffering.
         </p> */}
 
-        <p className={styles.copy}>
+        {/* <p className={styles.copy}>
           The Secrets of the Kingdom of God are revealed to those who have faith in Jesus.
           Jesus is still alive today, bringing people closer to God! After I gave all my belongings away,
           I wrote this book, containing all the things I had heard from God over the 6 years previous.
           In this collection you will find strnegth in love and forgiveness and peace, with answers
           to questions on suffering, law, and science. You are welcome to read on, and see if I am correct!
           Email is offered to grow the community. Thank you.
+        </p> */}
+
+        <p className={styles.copy}>
+          Are you looking for friends who share a faith in Jesus Christ? Do you crave
+          a spiritual movement that emphasizes Jesus' greatest teachings? Whether that
+          be giving away all your belongings, or making peace in the face of violence,
+          or loving your enemies. At Our Virtue meetings, we are focused on the Gospel, but place
+          less emphasis on the other books in the Bible. <br />If this appeals to you, Welcome!<br />
+          {/* You may enter your email below to connect and read our book which reiterates many of Jesus teachings
+          for the sake of clarity and strength. */}
+          Enter your email below to join a small group of regular people from all walks of life, living out Jesus' teachings together. You'll also get access to our book, which explores many of these ideas further.
         </p>
 
         <button
@@ -139,34 +158,52 @@ export default function Home() {
             />
           </div>
 
-          {variantConfig && (
-            <fieldset className={styles.question}>
-              <legend className={styles.questionLabel}>
-                {variantConfig.question}
-              </legend>
-              <div className={styles.options}>
-                {variantConfig.options.map((option) => (
-                  <label key={option} className={styles.option}>
-                    <input
-                      type="radio"
-                      name="signup-answer"
-                      value={option}
-                      checked={answer === option}
-                      onChange={() => setAnswer(option)}
-                      disabled={status === "submitting"}
-                      required
-                    />
-                    <span>{option}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-          )}
+          <fieldset className={styles.question}>
+            <legend className={styles.questionLabel}>
+              Would you like to join a study group? (optional)
+            </legend>
+            <div className={styles.options}>
+              {STUDY_GROUP_PREFERENCE_KEYS.map((key) => (
+                <label key={key} className={styles.option}>
+                  <input
+                    type="radio"
+                    name="study-group-preference"
+                    value={key}
+                    checked={studyGroupPreference === key}
+                    onChange={() => setStudyGroupPreference(key)}
+                    disabled={status === "submitting"}
+                  />
+                  <span>{STUDY_GROUP_PREFERENCES[key]}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset className={styles.question}>
+            <legend className={styles.questionLabel}>
+              What do you want us to do with your email? (optional)
+            </legend>
+            <div className={styles.options}>
+              {EMAIL_PREFERENCE_KEYS.map((key) => (
+                <label key={key} className={styles.option}>
+                  <input
+                    type="radio"
+                    name="email-preference"
+                    value={key}
+                    checked={emailPreference === key}
+                    onChange={() => setEmailPreference(key)}
+                    disabled={status === "submitting"}
+                  />
+                  <span>{EMAIL_PREFERENCES[key]}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
           <button
             type="submit"
             className={styles.submit}
-            disabled={status === "submitting" || !variant || !answer}
+            disabled={status === "submitting"}
           >
             {status === "submitting" ? "Entering" : "Enter"}
           </button>

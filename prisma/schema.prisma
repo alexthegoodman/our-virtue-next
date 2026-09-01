@@ -243,6 +243,9 @@ model EmailSubscriber {
   answer    String?       // the option text they selected for that variant's question
   createdAt DateTime      @default(now())
 
+  studyGroupPreference StudyGroupPreference? // whether/how they'd like to join a study group
+  emailPreference      EmailPreference?      // what they want done with their email
+
   unsubscribedAt   DateTime? // set when they click unsubscribe; stops all future sends
   nextVerseEmailAt DateTime? // when the recurring verse email is next due
   lastVerseEmailAt DateTime? // when the recurring verse email was last sent
@@ -257,6 +260,18 @@ enum SignupVariant {
   A
   B
   C
+}
+
+enum StudyGroupPreference {
+  IN_PERSON
+  ONLINE
+  NO
+}
+
+enum EmailPreference {
+  VERSES
+  DIRECT_OUTREACH
+  NOTHING
 }
 
 // Rolling counters for the signup form personalization A/B test.
