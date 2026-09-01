@@ -124,13 +124,13 @@ export default function Home() {
 
         <p className={styles.copy}>
           Are you looking for friends who share a faith in Jesus Christ? Do you crave
-          a spiritual movement that emphasizes Jesus' greatest teachings? Whether that
+          a spiritual movement that emphasizes Jesus&apos; greatest teachings? Whether that
           be giving away all your belongings, or making peace in the face of violence,
           or loving your enemies. At Our Virtue meetings, we are focused on the Gospel, but place
           less emphasis on the other books in the Bible. <br />If this appeals to you, Welcome!<br />
           {/* You may enter your email below to connect and read our book which reiterates many of Jesus teachings
           for the sake of clarity and strength. */}
-          Enter your email below to join a small group of regular people from all walks of life, living out Jesus' teachings together. You'll also get access to our book, which explores many of these ideas further.
+          Enter your email below to join a small group of regular people from all walks of life, living out Jesus&apos; teachings together. You&apos;ll also get access to our book, which explores many of these ideas further.
         </p>
 
         <button
