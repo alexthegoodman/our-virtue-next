@@ -80,6 +80,7 @@ article.fullContent {
   cursor: pointer;
   font-size: 0.8rem;
   color: #666;
+  margin-left: 6px;
 }
 
 .logoutButton:hover {

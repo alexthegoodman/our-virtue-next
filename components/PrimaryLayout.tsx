@@ -106,17 +106,22 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
         <div className={styles.right}>
           <div className={styles.desktopAuth}>
             {user ? (
-              <div className={styles.userSection}>
-                <Avatar
-                  username={user.username}
-                  avatarUrl={user.avatarUrl}
-                  size={28}
-                />
-                <span className={styles.username}>@{user.username}</span>
+              <>
+                <Link href="/profile/edit">
+                  <div className={styles.userSection}>
+                    <Avatar
+                      username={user.username}
+                      avatarUrl={user.avatarUrl}
+                      size={28}
+                    />
+                    <span className={styles.username}>@{user.username}</span>
+                    
+                  </div>
+                </Link>
                 <button onClick={logout} className={styles.logoutButton}>
                   Sign Out
                 </button>
-              </div>
+              </>
             ) : (
               <button
                 onClick={() => setShowAuthModal(true)}
