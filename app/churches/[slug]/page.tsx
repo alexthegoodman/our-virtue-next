@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import { Link } from "react-aria-components";
+import MentionTextarea from "@/components/mentions/MentionTextarea";
+import MentionText from "@/components/mentions/MentionText";
 import styles from "./page.module.css";
 
 interface Church {
@@ -132,7 +134,7 @@ export default function ChurchPage() {
     if (!user || !church || !newPost.content.trim()) return;
 
     try {
-      const response = await fetch(`/api/churches/${church.id}/posts`, {
+      const response = await fetch(`/api/churches/${church.slug}/posts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -291,13 +293,13 @@ export default function ChurchPage() {
                       }
                       className={styles.titleInput}
                     />
-                    <textarea
-                      placeholder="What's on your mind?"
+                    <MentionTextarea
+                      placeholder="What's on your mind? (type @ to mention someone)"
                       value={newPost.content}
-                      onChange={(e) =>
+                      onChange={(content) =>
                         setNewPost((prev) => ({
                           ...prev,
-                          content: e.target.value,
+                          content,
                         }))
                       }
                       className={styles.contentTextarea}
@@ -329,6 +331,7 @@ export default function ChurchPage() {
               {posts.map((post) => (
                 <div
                   key={post.id}
+                  id={`post-${post.id}`}
                   className={`${styles.postCard} ${
                     post.isPinned ? styles.pinnedPost : ""
                   }`}
@@ -352,7 +355,9 @@ export default function ChurchPage() {
 
                   <div className={styles.postContent}>
                     {post.content.split("\n").map((line, i) => (
-                      <p key={i}>{line}</p>
+                      <p key={i}>
+                        <MentionText content={line} />
+                      </p>
                     ))}
                   </div>
 

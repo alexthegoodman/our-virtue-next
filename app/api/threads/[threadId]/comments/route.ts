@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getUserFromRequest } from '@/lib/auth';
 import { moderateContent, checkRateLimit, detectSpam } from '@/lib/moderation';
+import { notifyMentions } from '@/lib/mentionNotifications';
+import { SITE_URL } from '@/lib/verses';
 
 export async function POST(
   request: NextRequest,
@@ -54,7 +56,7 @@ export async function POST(
     // Verify thread exists
     const thread = await prisma.thread.findUnique({
       where: { id: params.threadId },
-      select: { id: true, isLocked: true }
+      select: { id: true, isLocked: true, title: true, stanzaPath: true }
     });
 
     if (!thread) {
@@ -101,6 +103,14 @@ export async function POST(
           }
         }
       }
+    });
+
+    await notifyMentions({
+      content,
+      mentionerName: user.username,
+      mentionerUserId: user.userId,
+      contextLabel: `${user.username} mentioned you in a comment on "${thread.title}"`,
+      url: `${SITE_URL}${thread.stanzaPath}?thread=${thread.id}`,
     });
 
     return NextResponse.json({

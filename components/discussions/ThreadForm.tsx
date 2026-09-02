@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import MentionTextarea from '@/components/mentions/MentionTextarea';
 import styles from './ThreadForm.module.css';
 
 interface ThreadFormProps {
@@ -108,14 +109,14 @@ export default function ThreadForm({ stanzaPath, onSubmit, onCancel }: ThreadFor
 
         <div className={styles.field}>
           <label htmlFor="content">Message</label>
-          <textarea
+          <MentionTextarea
             id="content"
             value={formData.content}
-            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+            onChange={(content) => setFormData({ ...formData, content })}
             required
             rows={4}
             maxLength={1000}
-            placeholder="Share your thoughts..."
+            placeholder="Share your thoughts... (type @ to mention someone)"
           />
         </div>
 

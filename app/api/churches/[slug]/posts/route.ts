@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getUserFromRequest } from "@/lib/auth";
+import { notifyMentions } from "@/lib/mentionNotifications";
+import { SITE_URL } from "@/lib/verses";
 
 const prisma = new PrismaClient();
 
@@ -87,7 +89,8 @@ export async function POST(
         isActive: true
       },
       select: {
-        id: true
+        id: true,
+        name: true
       }
     });
 
@@ -147,6 +150,14 @@ export async function POST(
           }
         }
       }
+    });
+
+    await notifyMentions({
+      content: post.content,
+      mentionerName: user.username,
+      mentionerUserId: user.userId,
+      contextLabel: `${user.username} mentioned you in a post in ${church.name}`,
+      url: `${SITE_URL}/churches/${slug}#post-${post.id}`,
     });
 
     return NextResponse.json(post);

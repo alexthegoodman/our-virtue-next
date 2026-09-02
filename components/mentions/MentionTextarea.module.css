@@ -1,0 +1,56 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.wrapper textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin: 4px 0 0;
+  padding: 4px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 50;
+  list-style: none;
+}
+
+.item,
+.activeItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.activeItem {
+  background: rgba(229, 229, 56, 0.35);
+}
+
+.badge {
+  color: #999;
+  font-size: 0.8rem;
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.hint {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  color: #999;
+}

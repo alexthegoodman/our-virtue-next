@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getUserFromRequest } from '@/lib/auth';
 import { moderateContent, checkRateLimit, detectSpam } from '@/lib/moderation';
+import { notifyMentions } from '@/lib/mentionNotifications';
+import { SITE_URL } from '@/lib/verses';
 
 export async function GET(
   request: NextRequest,
@@ -156,6 +158,14 @@ export async function POST(
           }
         }
       }
+    });
+
+    await notifyMentions({
+      content,
+      mentionerName: user.username,
+      mentionerUserId: user.userId,
+      contextLabel: `${user.username} mentioned you in a discussion: "${title}"`,
+      url: `${SITE_URL}${decodedStanzaPath}?thread=${thread.id}`,
     });
 
     return NextResponse.json({

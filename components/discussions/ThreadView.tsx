@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import MentionTextarea from '@/components/mentions/MentionTextarea';
+import MentionText from '@/components/mentions/MentionText';
 import styles from './ThreadView.module.css';
 
 interface Thread {
@@ -159,7 +161,9 @@ export default function ThreadView({ threadId, onClose }: ThreadViewProps) {
               <span className={styles.date}>{formatDate(thread.createdAt)}</span>
             </div>
             
-            <p className={styles.threadText}>{thread.content}</p>
+            <p className={styles.threadText}>
+              <MentionText content={thread.content} />
+            </p>
             
             {thread.tags.length > 0 && (
               <div className={styles.tags}>
@@ -193,10 +197,10 @@ export default function ThreadView({ threadId, onClose }: ThreadViewProps) {
             
             {user && (
               <form onSubmit={(e) => handleSubmitComment(e)} className={styles.commentForm}>
-                <textarea
+                <MentionTextarea
                   value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Share your thoughts..."
+                  onChange={setNewComment}
+                  placeholder="Share your thoughts... (type @ to mention someone)"
                   rows={3}
                 />
                 <button type="submit" disabled={submitLoading || !newComment.trim()}>
@@ -211,7 +215,9 @@ export default function ThreadView({ threadId, onClose }: ThreadViewProps) {
                   <span className={styles.author}>@{comment.author.username}</span>
                   <span className={styles.date}>{formatDate(comment.createdAt)}</span>
                 </div>
-                <p className={styles.commentText}>{comment.content}</p>
+                <p className={styles.commentText}>
+                  <MentionText content={comment.content} />
+                </p>
                 <div className={styles.commentActions}>
                   <div className={styles.voteControls}>
                     <button 
@@ -242,10 +248,10 @@ export default function ThreadView({ threadId, onClose }: ThreadViewProps) {
 
                 {replyingTo === comment.id && (
                   <form onSubmit={(e) => handleSubmitComment(e, comment.id)} className={styles.replyForm}>
-                    <textarea
+                    <MentionTextarea
                       value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      placeholder="Write a reply..."
+                      onChange={setNewComment}
+                      placeholder="Write a reply... (type @ to mention someone)"
                       rows={2}
                     />
                     <div className={styles.replyActions}>
@@ -265,7 +271,9 @@ export default function ThreadView({ threadId, onClose }: ThreadViewProps) {
                       <span className={styles.author}>@{reply.author.username}</span>
                       <span className={styles.date}>{formatDate(reply.createdAt)}</span>
                     </div>
-                    <p className={styles.commentText}>{reply.content}</p>
+                    <p className={styles.commentText}>
+                      <MentionText content={reply.content} />
+                    </p>
                     <div className={styles.voteControls}>
                       <button 
                         onClick={() => handleVote(reply.id, true, true)}
