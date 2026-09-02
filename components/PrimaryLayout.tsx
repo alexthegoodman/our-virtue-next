@@ -9,6 +9,8 @@ import { Link } from "react-aria-components";
 import { useAuth } from "@/contexts/AuthContext";
 import AuthModal from "./auth/AuthModal";
 import SearchBar from "./SearchBar";
+import ProfileCompletionBanner from "./ProfileCompletionBanner";
+import Avatar from "./Avatar";
 
 export default function PrimaryLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -105,6 +107,11 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
           <div className={styles.desktopAuth}>
             {user ? (
               <div className={styles.userSection}>
+                <Avatar
+                  username={user.username}
+                  avatarUrl={user.avatarUrl}
+                  size={28}
+                />
                 <span className={styles.username}>@{user.username}</span>
                 <button onClick={logout} className={styles.logoutButton}>
                   Sign Out
@@ -198,6 +205,11 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
           <div className={styles.mobileAuth}>
             {user ? (
               <div className={styles.userSection}>
+                <Avatar
+                  username={user.username}
+                  avatarUrl={user.avatarUrl}
+                  size={28}
+                />
                 <span className={styles.username}>@{user.username}</span>
                 <button onClick={logout} className={styles.logoutButton}>
                   Sign Out
@@ -217,6 +229,8 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
       )}
+
+      <ProfileCompletionBanner />
 
       {children}
 

@@ -200,6 +200,36 @@
 }
 
 /* Posts Tab */
+.firstPostNudge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: rgba(229, 229, 56, 0.12);
+  border: 1px solid rgba(229, 229, 56, 0.4);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  color: #444;
+}
+
+.firstPostButton {
+  background: rgba(229, 229, 56, 0.8);
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.firstPostButton:hover {
+  background: rgb(229, 229, 56);
+}
+
 .newPostSection {
   margin-bottom: 30px;
 }
@@ -338,6 +368,12 @@
   gap: 12px;
 }
 
+.authorMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .postDate {
   color: #888;
   font-size: 0.9rem;
@@ -391,6 +427,105 @@
   color: #666;
 }
 
+/* Comments */
+.commentsSection {
+  border-top: 1px solid #eee;
+  margin-top: 12px;
+  padding-top: 16px;
+}
+
+.commentsLoading {
+  color: #888;
+  font-size: 0.9rem;
+  padding: 8px 0;
+}
+
+.commentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.commentCard {
+  background: #f8f8f8;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.commentHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}
+
+.commentDate {
+  color: #888;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+.commentContent {
+  color: #333;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.noComments {
+  color: #888;
+  font-size: 0.9rem;
+  padding: 4px 0 12px;
+}
+
+.commentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.commentTextarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.commentTextarea:focus {
+  outline: none;
+  border-color: rgba(229, 229, 56, 0.6);
+}
+
+.commentFormActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.commentSubmitButton {
+  background: rgba(229, 229, 56, 0.8);
+  color: #333;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.commentSubmitButton:hover:not(:disabled) {
+  background: rgb(229, 229, 56);
+}
+
+.commentSubmitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .emptyPosts {
   text-align: center;
   padding: 60px 20px;
@@ -414,6 +549,9 @@
 }
 
 .memberCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   background: white;
   border-radius: 12px;
   padding: 20px;

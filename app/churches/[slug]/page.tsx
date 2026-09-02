@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Link } from "react-aria-components";
 import MentionTextarea from "@/components/mentions/MentionTextarea";
 import MentionText from "@/components/mentions/MentionText";
+import Avatar from "@/components/Avatar";
 import styles from "./page.module.css";
 
 interface Church {
@@ -30,9 +31,21 @@ interface ChurchPost {
   author: {
     id: string;
     username: string;
+    avatarUrl?: string | null;
   };
   _count: {
     comments: number;
+  };
+}
+
+interface ChurchPostCommentData {
+  id: string;
+  content: string;
+  createdAt: string;
+  author: {
+    id: string;
+    username: string;
+    avatarUrl?: string | null;
   };
 }
 
@@ -41,6 +54,7 @@ interface Member {
   user: {
     id: string;
     username: string;
+    avatarUrl?: string | null;
   };
   role: string;
   joinedAt: string;
@@ -59,6 +73,10 @@ export default function ChurchPage() {
   const [activeTab, setActiveTab] = useState<"posts" | "members">("posts");
   const [newPost, setNewPost] = useState({ title: "", content: "" });
   const [showNewPostForm, setShowNewPostForm] = useState(false);
+  const [expandedPostId, setExpandedPostId] = useState<string | null>(null);
+  const [comments, setComments] = useState<Record<string, ChurchPostCommentData[]>>({});
+  const [loadingComments, setLoadingComments] = useState<Record<string, boolean>>({});
+  const [newComment, setNewComment] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (slug) {
@@ -155,6 +173,85 @@ export default function ChurchPage() {
       console.error("Error creating post:", error);
     }
   };
+
+  const fetchComments = async (postId: string) => {
+    setLoadingComments((prev) => ({ ...prev, [postId]: true }));
+    try {
+      const headers: Record<string, string> = {};
+      const token = localStorage.getItem("auth-token");
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
+      const response = await fetch(
+        `/api/churches/${slug}/posts/${postId}/comments`,
+        { headers }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setComments((prev) => ({ ...prev, [postId]: data }));
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    } finally {
+      setLoadingComments((prev) => ({ ...prev, [postId]: false }));
+    }
+  };
+
+  const toggleComments = (postId: string) => {
+    if (expandedPostId === postId) {
+      setExpandedPostId(null);
+      return;
+    }
+
+    setExpandedPostId(postId);
+    if (!comments[postId]) {
+      fetchComments(postId);
+    }
+  };
+
+  const handleCreateComment = async (e: React.FormEvent, postId: string) => {
+    e.preventDefault();
+    const content = (newComment[postId] || "").trim();
+    if (!user || !content) return;
+
+    try {
+      const response = await fetch(
+        `/api/churches/${slug}/posts/${postId}/comments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("auth-token")}`,
+          },
+          body: JSON.stringify({ content }),
+        }
+      );
+
+      if (response.ok) {
+        const comment = await response.json();
+        setComments((prev) => ({
+          ...prev,
+          [postId]: [...(prev[postId] || []), comment],
+        }));
+        setNewComment((prev) => ({ ...prev, [postId]: "" }));
+        setPosts((prev) =>
+          prev.map((p) =>
+            p.id === postId
+              ? { ...p, _count: { comments: p._count.comments + 1 } }
+              : p
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error creating comment:", error);
+    }
+  };
+
+  const hasPostedInChurch = user
+    ? posts.some((post) => post.author.id === user.id)
+    : false;
 
   const getCategoryDisplayName = (category: string) => {
     switch (category) {
@@ -266,6 +363,21 @@ export default function ChurchPage() {
       <div className={styles.content}>
         {activeTab === "posts" && (
           <div className={styles.postsTab}>
+            {user && church.isJoined && !hasPostedInChurch && !showNewPostForm && (
+              <div className={styles.firstPostNudge}>
+                <span>
+                  👋 You haven&apos;t posted here yet — introduce yourself to
+                  the community!
+                </span>
+                <button
+                  onClick={() => setShowNewPostForm(true)}
+                  className={styles.firstPostButton}
+                >
+                  Make Your First Post
+                </button>
+              </div>
+            )}
+
             {/* New Post Form */}
             {user && church.isJoined && (
               <div className={styles.newPostSection}>
@@ -342,10 +454,17 @@ export default function ChurchPage() {
 
                   <div className={styles.postHeader}>
                     <div className={styles.postAuthor}>
-                      <strong>@{post.author.username}</strong>
-                      <span className={styles.postDate}>
-                        {formatDate(post.createdAt)}
-                      </span>
+                      <Avatar
+                        username={post.author.username}
+                        avatarUrl={post.author.avatarUrl}
+                        size={40}
+                      />
+                      <div className={styles.authorMeta}>
+                        <strong>@{post.author.username}</strong>
+                        <span className={styles.postDate}>
+                          {formatDate(post.createdAt)}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -368,11 +487,83 @@ export default function ChurchPage() {
                   )}
 
                   <div className={styles.postFooter}>
-                    <span className={styles.commentCount}>
+                    <span
+                      className={styles.commentCount}
+                      onClick={() => toggleComments(post.id)}
+                    >
                       {post._count.comments}{" "}
                       {post._count.comments === 1 ? "comment" : "comments"}
                     </span>
                   </div>
+
+                  {expandedPostId === post.id && (
+                    <div className={styles.commentsSection}>
+                      {loadingComments[post.id] && (
+                        <div className={styles.commentsLoading}>
+                          Loading comments...
+                        </div>
+                      )}
+
+                      {!loadingComments[post.id] && (
+                        <div className={styles.commentsList}>
+                          {(comments[post.id] || []).map((comment) => (
+                            <div key={comment.id} className={styles.commentCard}>
+                              <div className={styles.commentHeader}>
+                                <Avatar
+                                  username={comment.author.username}
+                                  avatarUrl={comment.author.avatarUrl}
+                                  size={28}
+                                />
+                                <strong>@{comment.author.username}</strong>
+                                <span className={styles.commentDate}>
+                                  {formatDate(comment.createdAt)}
+                                </span>
+                              </div>
+                              <div className={styles.commentContent}>
+                                <MentionText content={comment.content} />
+                              </div>
+                            </div>
+                          ))}
+
+                          {(comments[post.id] || []).length === 0 && (
+                            <div className={styles.noComments}>
+                              No comments yet.
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {user && church.isJoined && (
+                        <form
+                          onSubmit={(e) => handleCreateComment(e, post.id)}
+                          className={styles.commentForm}
+                        >
+                          <MentionTextarea
+                            placeholder="Write a comment... (type @ to mention someone)"
+                            value={newComment[post.id] || ""}
+                            onChange={(content) =>
+                              setNewComment((prev) => ({
+                                ...prev,
+                                [post.id]: content,
+                              }))
+                            }
+                            className={styles.commentTextarea}
+                            rows={2}
+                            required
+                          />
+                          <div className={styles.commentFormActions}>
+                            <button
+                              type="submit"
+                              className={styles.commentSubmitButton}
+                              disabled={!(newComment[post.id] || "").trim()}
+                            >
+                              Reply
+                            </button>
+                          </div>
+                        </form>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
 
@@ -395,14 +586,21 @@ export default function ChurchPage() {
             <div className={styles.membersList}>
               {members.map((member) => (
                 <div key={member.id} className={styles.memberCard}>
-                  <div className={styles.memberInfo}>
-                    <strong>@{member.user.username}</strong>
-                    {member.role !== "MEMBER" && (
-                      <span className={styles.memberRole}>{member.role}</span>
-                    )}
-                  </div>
-                  <div className={styles.memberDate}>
-                    Joined {formatDate(member.joinedAt)}
+                  <Avatar
+                    username={member.user.username}
+                    avatarUrl={member.user.avatarUrl}
+                    size={44}
+                  />
+                  <div>
+                    <div className={styles.memberInfo}>
+                      <strong>@{member.user.username}</strong>
+                      {member.role !== "MEMBER" && (
+                        <span className={styles.memberRole}>{member.role}</span>
+                      )}
+                    </div>
+                    <div className={styles.memberDate}>
+                      Joined {formatDate(member.joinedAt)}
+                    </div>
                   </div>
                 </div>
               ))}

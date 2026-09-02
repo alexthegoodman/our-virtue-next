@@ -40,7 +40,8 @@ export async function GET(
         author: {
           select: {
             id: true,
-            username: true
+            username: true,
+            avatarUrl: true
           }
         },
         _count: {
@@ -141,7 +142,8 @@ export async function POST(
         author: {
           select: {
             id: true,
-            username: true
+            username: true,
+            avatarUrl: true
           }
         },
         _count: {

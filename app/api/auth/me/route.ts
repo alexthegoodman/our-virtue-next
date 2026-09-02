@@ -17,6 +17,8 @@ export async function GET(request: NextRequest) {
         id: true,
         email: true,
         username: true,
+        avatarUrl: true,
+        bio: true,
         isAdmin: true,
         createdAt: true,
         updatedAt: true,

@@ -1,0 +1,51 @@
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: rgba(229, 229, 56, 0.15);
+  border-bottom: 1px solid rgba(229, 229, 56, 0.4);
+  padding: 12px 20px;
+  text-align: center;
+}
+
+.text {
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.completeButton {
+  background: rgba(229, 229, 56, 0.8);
+  color: #333;
+  text-decoration: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.completeButton:hover {
+  background: rgb(229, 229, 56);
+}
+
+.dismissButton {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px 6px;
+  line-height: 1;
+}
+
+.dismissButton:hover {
+  color: #555;
+}
