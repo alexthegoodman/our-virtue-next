@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { Link } from "react-aria-components";
@@ -21,6 +21,16 @@ export default function EditProfilePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  // AuthContext loads the user asynchronously, so on first render `user` is
+  // often still null — sync the fields in once the fetched data arrives.
+  const initialized = useRef(false);
+  useEffect(() => {
+    if (!user || initialized.current) return;
+    initialized.current = true;
+    setBio(user.bio || "");
+    setAvatarPreview(user.avatarUrl || null);
+  }, [user]);
 
   if (!user) {
     return (
