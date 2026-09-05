@@ -115,7 +115,9 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
                       size={28}
                     />
                     <span className={styles.username}>@{user.username}</span>
-                    
+                    {user.hasPassword === false && (
+                      <span className={styles.badge}>Set password</span>
+                    )}
                   </div>
                 </Link>
                 <button onClick={logout} className={styles.logoutButton}>
@@ -216,6 +218,9 @@ export default function PrimaryLayout({ children }: { children: ReactNode }) {
                   size={28}
                 />
                 <span className={styles.username}>@{user.username}</span>
+                {user.hasPassword === false && (
+                  <span className={styles.badge}>Set password</span>
+                )}
                 <button onClick={logout} className={styles.logoutButton}>
                   Sign Out
                 </button>

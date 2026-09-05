@@ -14,7 +14,7 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   username  String   @unique
-  password  String
+  password  String?  // null until the user sets one (e.g. accounts auto-created from email signup)
   avatarUrl String?  // Vercel Blob image URL
   bio       String?
   isActive  Boolean  @default(true)

@@ -32,6 +32,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!user.password) {
+      return NextResponse.json(
+        {
+          error:
+            'This account doesn\'t have a password yet. Sign in isn\'t available until one is set from your profile.',
+        },
+        { status: 401 }
+      );
+    }
+
     // Verify password
     const isValidPassword = await verifyPassword(password, user.password);
     if (!isValidPassword) {

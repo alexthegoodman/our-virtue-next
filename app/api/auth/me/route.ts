@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
         isAdmin: true,
         createdAt: true,
         updatedAt: true,
+        password: true,
       },
     });
 
@@ -29,7 +30,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ user: dbUser });
+    const { password, ...userWithoutPassword } = dbUser;
+
+    return NextResponse.json({
+      user: { ...userWithoutPassword, hasPassword: password !== null },
+    });
   } catch (error) {
     console.error("Get user error:", error);
     return NextResponse.json(

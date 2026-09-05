@@ -1,21 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Cormorant_Garamond } from "next/font/google";
 import posthog from "posthog-js";
 import { poemList } from "@/content/poems";
 import WhatsInsideModal from "@/components/WhatsInsideModal";
 import * as fpixel from "@/lib/fpixel";
-import {
-  STUDY_GROUP_PREFERENCES,
-  STUDY_GROUP_PREFERENCE_KEYS,
-  EMAIL_PREFERENCES,
-  EMAIL_PREFERENCE_KEYS,
-  StudyGroupPreferenceKey,
-  EmailPreferenceKey,
-} from "@/lib/subscriberPreferences";
+import { useAuth } from "@/contexts/AuthContext";
+import { getCategoryDisplayName } from "@/lib/churchCategories";
+import { getMemberCountLabel } from "@/lib/memberCountLabel";
 import styles from "./page.module.css";
+
+interface ChurchOption {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+  memberCount: number;
+}
 
 const serif = Cormorant_Garamond({
   subsets: ["latin"],
@@ -28,11 +31,11 @@ const ENTRY_PATH = "/salvation/believe-in-god";
 
 export default function Home() {
   const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
-  const [studyGroupPreference, setStudyGroupPreference] =
-    useState<StudyGroupPreferenceKey | "">("");
-  const [emailPreference, setEmailPreference] =
-    useState<EmailPreferenceKey | "">("");
+  const [churches, setChurches] = useState<ChurchOption[]>([]);
+  const [selectedChurchId, setSelectedChurchId] = useState("");
+  const [introContent, setIntroContent] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "error">(
     "idle"
   );
@@ -43,6 +46,15 @@ export default function Home() {
     (sum, chapter) => sum + chapter.items.length,
     0
   );
+
+  useEffect(() => {
+    fetch("/api/churches")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.churches) setChurches(data.churches);
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,8 +69,10 @@ export default function Home() {
         body: JSON.stringify({
           email,
           source: "landing_gate",
-          ...(studyGroupPreference ? { studyGroupPreference } : {}),
-          ...(emailPreference ? { emailPreference } : {}),
+          ...(selectedChurchId ? { churchId: selectedChurchId } : {}),
+          ...(selectedChurchId && introContent.trim()
+            ? { introContent: introContent.trim() }
+            : {}),
         }),
       });
 
@@ -67,10 +81,15 @@ export default function Home() {
         throw new Error(data.error || "Something went wrong.");
       }
 
+      const data = await response.json().catch(() => ({}));
+      if (data?.account?.token && data?.account?.user) {
+        login(data.account.token, data.account.user);
+      }
+
       fpixel.event("Lead", { content_name: "landing_gate" });
       posthog.capture("signup_form_submitted", {
-        studyGroupPreference: studyGroupPreference || undefined,
-        emailPreference: emailPreference || undefined,
+        churchId: selectedChurchId || undefined,
+        postedIntro: Boolean(selectedChurchId && introContent.trim()),
       });
 
       router.push(ENTRY_PATH);
@@ -159,47 +178,60 @@ export default function Home() {
             />
           </div>
 
-          <fieldset className={styles.question}>
-            <legend className={styles.questionLabel}>
-              Would you like to join a study group? (optional)
-            </legend>
-            <div className={styles.options}>
-              {STUDY_GROUP_PREFERENCE_KEYS.map((key) => (
-                <label key={key} className={styles.option}>
+          {churches.length > 0 && (
+            <fieldset className={styles.question}>
+              <legend className={styles.questionLabel}>
+                Join a group that fits you
+              </legend>
+              <div className={styles.options}>
+                {churches.map((church) => (
+                  <label key={church.id} className={styles.option}>
+                    <input
+                      type="radio"
+                      name="church"
+                      value={church.id}
+                      checked={selectedChurchId === church.id}
+                      onChange={() => setSelectedChurchId(church.id)}
+                      disabled={status === "submitting"}
+                    />
+                    <span>
+                      {church.name} &middot;{" "}
+                      {getCategoryDisplayName(church.category)} &middot;{" "}
+                      {getMemberCountLabel(church.memberCount)}
+                    </span>
+                  </label>
+                ))}
+                <label className={styles.option}>
                   <input
                     type="radio"
-                    name="study-group-preference"
-                    value={key}
-                    checked={studyGroupPreference === key}
-                    onChange={() => setStudyGroupPreference(key)}
+                    name="church"
+                    value=""
+                    checked={selectedChurchId === ""}
+                    onChange={() => setSelectedChurchId("")}
                     disabled={status === "submitting"}
                   />
-                  <span>{STUDY_GROUP_PREFERENCES[key]}</span>
+                  <span>I&rsquo;ll decide later</span>
                 </label>
-              ))}
-            </div>
-          </fieldset>
+              </div>
+            </fieldset>
+          )}
 
-          <fieldset className={styles.question}>
-            <legend className={styles.questionLabel}>
-              What do you want us to do with your email? (optional)
-            </legend>
-            <div className={styles.options}>
-              {EMAIL_PREFERENCE_KEYS.map((key) => (
-                <label key={key} className={styles.option}>
-                  <input
-                    type="radio"
-                    name="email-preference"
-                    value={key}
-                    checked={emailPreference === key}
-                    onChange={() => setEmailPreference(key)}
-                    disabled={status === "submitting"}
-                  />
-                  <span>{EMAIL_PREFERENCES[key]}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          {selectedChurchId && (
+            <fieldset className={styles.question}>
+              <legend className={styles.questionLabel}>
+                Introduce yourself to the group
+              </legend>
+              <textarea
+                className={styles.introTextarea}
+                value={introContent}
+                onChange={(e) => setIntroContent(e.target.value)}
+                placeholder="Share a bit about yourself and what brought you here..."
+                rows={3}
+                maxLength={2000}
+                disabled={status === "submitting"}
+              />
+            </fieldset>
+          )}
 
           <button
             type="submit"
@@ -213,7 +245,7 @@ export default function Home() {
             <p className={styles.errorText}>{error}</p>
           )}
           <p className={styles.fineprint}>
-            Used to build relationships and community with you and others.
+            Get verses to your inbox every 3 days. You can set a password anytime from your profile.
           </p>
         </form>
 

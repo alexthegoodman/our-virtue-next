@@ -12,6 +12,10 @@ import {
   EmailPreferenceKey,
 } from '@/lib/subscriberPreferences';
 import { computeFirstVerseEmailTime } from '@/lib/scheduleVerseEmail';
+import { signToken } from '@/lib/auth';
+import { generateUniqueUsername } from '@/lib/generateUsername';
+
+const MAX_INTRO_LENGTH = 2000;
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,6 +26,8 @@ export async function POST(request: NextRequest) {
       answer,
       studyGroupPreference,
       emailPreference,
+      churchId,
+      introContent,
     } = await request.json();
 
     if (!email || typeof email !== 'string') {
@@ -62,7 +68,11 @@ export async function POST(request: NextRequest) {
     }
     const hasVariant = validatedVariant !== null;
 
-    // Both preference fields are optional.
+    // The study-group/email-preference survey has been retired from the
+    // form (the vast majority of respondents picked "Online" + "Verses to
+    // my inbox" anyway), but the fields are still accepted for back-compat.
+    // Every new subscriber is now auto-subscribed to Verses emails by
+    // default instead of being asked.
     let validatedStudyGroupPreference: StudyGroupPreferenceKey | null = null;
     if (studyGroupPreference !== undefined && studyGroupPreference !== null) {
       if (!isStudyGroupPreference(studyGroupPreference)) {
@@ -85,16 +95,45 @@ export async function POST(request: NextRequest) {
       validatedEmailPreference = emailPreference;
     }
 
+    // Validate the optional church selection made right in the form.
+    let church: { id: string; name: string; slug: string } | null = null;
+    if (churchId !== undefined && churchId !== null && churchId !== '') {
+      if (typeof churchId !== 'string') {
+        return NextResponse.json({ error: 'Invalid church' }, { status: 400 });
+      }
+      church = await prisma.church.findFirst({
+        where: { id: churchId, isActive: true },
+        select: { id: true, name: true, slug: true },
+      });
+      if (!church) {
+        return NextResponse.json(
+          { error: 'That group could not be found' },
+          { status: 400 }
+        );
+      }
+      // Picking a group implies wanting group involvement, matching what
+      // the retired survey used to ask directly.
+      if (!validatedStudyGroupPreference) {
+        validatedStudyGroupPreference = 'ONLINE';
+      }
+    }
+
+    let trimmedIntro = '';
+    if (typeof introContent === 'string') {
+      trimmedIntro = introContent.trim().slice(0, MAX_INTRO_LENGTH);
+    }
+
     const existing = await prisma.emailSubscriber.findUnique({
       where: { email },
     });
 
     // Only the recurring verse email is automated. It's sent unless the
     // subscriber asked for direct outreach or nothing instead; unspecified
-    // defaults to verses, matching prior behavior.
+    // now explicitly defaults to VERSES for every new subscriber.
     const wantsVerses =
       validatedEmailPreference === null ||
       validatedEmailPreference === 'VERSES';
+    const emailPreferenceToStore = validatedEmailPreference ?? 'VERSES';
 
     const subscriber = await prisma.emailSubscriber.upsert({
       where: { email },
@@ -104,26 +143,20 @@ export async function POST(request: NextRequest) {
         ...(validatedStudyGroupPreference
           ? { studyGroupPreference: validatedStudyGroupPreference }
           : {}),
-        ...(validatedEmailPreference
-          ? {
-              emailPreference: validatedEmailPreference,
-              nextVerseEmailAt: wantsVerses
-                ? (existing?.nextVerseEmailAt ?? computeFirstVerseEmailTime())
-                : null,
-            }
-          : {}),
+        emailPreference: emailPreferenceToStore,
+        nextVerseEmailAt: wantsVerses
+          ? (existing?.nextVerseEmailAt ?? computeFirstVerseEmailTime())
+          : null,
       },
       create: {
         email,
         source: source || 'landing_gate',
         nextVerseEmailAt: wantsVerses ? computeFirstVerseEmailTime() : null,
+        emailPreference: emailPreferenceToStore,
         ...(hasVariant ? { variant: validatedVariant } : {}),
         ...(hasVariant && answer ? { answer } : {}),
         ...(validatedStudyGroupPreference
           ? { studyGroupPreference: validatedStudyGroupPreference }
-          : {}),
-        ...(validatedEmailPreference
-          ? { emailPreference: validatedEmailPreference }
           : {}),
       },
     });
@@ -139,7 +172,73 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ success: true });
+    // New subscribers also become new (passwordless) user accounts, so they
+    // can pick a church and post right from this form. We only do this for
+    // emails that don't already belong to a real account — a public,
+    // unauthenticated endpoint must never be able to join a group or post as
+    // an existing user just because it was given their email address.
+    let account: {
+      token: string;
+      user: {
+        id: string;
+        email: string;
+        username: string;
+        isAdmin: boolean;
+        createdAt: Date;
+      };
+    } | null = null;
+
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+
+    if (!existingUser) {
+      const username = await generateUniqueUsername(email);
+      const newUser = await prisma.user.create({
+        data: {
+          email,
+          username,
+          password: null,
+        },
+      });
+
+      if (church) {
+        await prisma.churchMember.upsert({
+          where: { churchId_userId: { churchId: church.id, userId: newUser.id } },
+          update: {},
+          create: { churchId: church.id, userId: newUser.id, role: 'MEMBER' },
+        });
+
+        if (trimmedIntro) {
+          await prisma.churchPost.create({
+            data: {
+              title: 'Introducing myself',
+              content: trimmedIntro,
+              churchId: church.id,
+              authorId: newUser.id,
+            },
+          });
+        }
+      }
+
+      const token = signToken({
+        userId: newUser.id,
+        email: newUser.email,
+        username: newUser.username,
+        isAdmin: newUser.isAdmin,
+      });
+
+      account = {
+        token,
+        user: {
+          id: newUser.id,
+          email: newUser.email,
+          username: newUser.username,
+          isAdmin: newUser.isAdmin,
+          createdAt: newUser.createdAt,
+        },
+      };
+    }
+
+    return NextResponse.json({ success: true, account });
   } catch (error) {
     console.error('Email subscriber error:', error);
     return NextResponse.json(

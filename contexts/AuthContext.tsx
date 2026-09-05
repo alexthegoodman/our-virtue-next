@@ -10,6 +10,7 @@ interface User {
   bio?: string | null;
   isAdmin: boolean;
   createdAt: string;
+  hasPassword?: boolean;
 }
 
 interface AuthContextType {

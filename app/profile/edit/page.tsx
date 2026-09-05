@@ -22,6 +22,12 @@ export default function EditProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
+
   // AuthContext loads the user asynchronously, so on first render `user` is
   // often still null — sync the fields in once the fetched data arrives.
   const initialized = useRef(false);
@@ -119,6 +125,45 @@ export default function EditProfilePage() {
     }
   };
 
+  const handleSetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordLoading(true);
+    setPasswordError(null);
+    setPasswordSuccess(false);
+
+    try {
+      if (password.length < 6) {
+        throw new Error("Password must be at least 6 characters long");
+      }
+      if (password !== confirmPassword) {
+        throw new Error("Passwords do not match");
+      }
+
+      const response = await fetch("/api/auth/set-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth-token")}`,
+        },
+        body: JSON.stringify({ password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to set password");
+      }
+
+      updateUser({ hasPassword: true });
+      setPassword("");
+      setConfirmPassword("");
+      setPasswordSuccess(true);
+    } catch (err) {
+      setPasswordError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -128,6 +173,63 @@ export default function EditProfilePage() {
           before you meet.
         </p>
       </div>
+
+      {user.hasPassword === false && (
+        <form onSubmit={handleSetPassword} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Set a Password</label>
+            <p className={styles.fileHint} style={{ marginBottom: 15 }}>
+              Your account was created from your email signup, so it doesn&apos;t
+              have a password yet. Set one now so you can sign back in later.
+            </p>
+          </div>
+
+          {passwordError && <div className={styles.error}>{passwordError}</div>}
+          {passwordSuccess && (
+            <div className={styles.success}>Password set!</div>
+          )}
+
+          <div className={styles.formGroup}>
+            <label htmlFor="password" className={styles.label}>
+              New Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={styles.textarea}
+              minLength={6}
+              required
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="confirmPassword" className={styles.label}>
+              Confirm Password
+            </label>
+            <input
+              id="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className={styles.textarea}
+              minLength={6}
+              required
+            />
+          </div>
+
+          <div className={styles.formActions}>
+            <button
+              type="submit"
+              disabled={passwordLoading}
+              className={styles.submitButton}
+            >
+              {passwordLoading ? "Saving..." : "Set Password"}
+            </button>
+          </div>
+        </form>
+      )}
 
       <form onSubmit={handleSubmit} className={styles.form}>
         {error && <div className={styles.error}>{error}</div>}

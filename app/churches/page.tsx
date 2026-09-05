@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-aria-components";
+import { getMemberCountLabel } from "@/lib/memberCountLabel";
 import styles from "./page.module.css";
 
 interface Church {
@@ -137,8 +138,7 @@ export default function ChurchesPage() {
 
               <div className={styles.churchMeta}>
                 <span className={styles.memberCount}>
-                  {church.memberCount}{" "}
-                  {church.memberCount === 1 ? "member" : "members"}
+                  {getMemberCountLabel(church.memberCount)}
                 </span>
               </div>
             </div>

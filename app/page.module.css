@@ -213,6 +213,26 @@
   flex-shrink: 0;
 }
 
+.introTextarea {
+  width: 90%;
+  background: transparent;
+  border: 1px solid #161616;
+  outline: none;
+  color: #161616;
+  font-size: 0.95rem;
+  padding: 14px 16px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.introTextarea::placeholder {
+  color: #a39d8c;
+}
+
+.introTextarea:focus {
+  background: #f0ecdf;
+}
+
 .errorText {
   color: #8c3f2c;
   font-size: 0.85rem;
